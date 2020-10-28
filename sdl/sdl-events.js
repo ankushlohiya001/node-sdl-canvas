@@ -73,7 +73,7 @@ function pollForEventsForever() {
         SDL.SDL_PollEvent(null);
         // setTimeout(forever, 10);
     }
-    setInterval(forever, 10);
+    return setInterval(forever, 10);
 }
 exports.pollForEventsForever = pollForEventsForever;
 function SDL_PumpEvents() {
