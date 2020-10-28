@@ -1,9 +1,10 @@
 # node-sdl-canvas
 
+node-sdl-canvas is written to be lightweight and performing html5-canvas behaviour natively without need of browser,
+as browser itself takes too much resources, and for javascript developer that's one only choice for performing graphic task..
 
-same as native-canvas but many changes, some bug fixes
-and most impornt thing,, light-weight(2-4 times less cpu usage than native-canvas)
+as the name suggests,, node-sdl-canvas use three technologies,, SDL, Canvas and Nodejs,,
 
-removed unnecessary and not usable features,,
+same performant as browser htmlcanvas,, in some case even more performant
 
-* great thanks to @mcchatman8009 for crafting native-canvas..
+*node-sdl-canvas is inspired by native-canvas..(author @mcchatman8009)
