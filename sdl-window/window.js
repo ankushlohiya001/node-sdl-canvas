@@ -10,7 +10,6 @@ const keyEvent=event.getCurrentKeyEvent;
 const mouseEvent=event.getCurrentMouseEvent;
 const initWindowEvent=event.getCurrentWindowEvent;
 appContext=new appContext();
-
 class SDLWindow extends EventEmitter{
   constructor(options){
     super();
@@ -36,18 +35,12 @@ class SDLWindow extends EventEmitter{
   }
   set canvas(can){
     this._canvas=can;
-  }
-  get canvasWidth(){
-    return this.canvas.width;
-  }
-  set canvasWidth(wid){
-    this.canvas.width=wid;
-  }
-  get canvasHeight(){
-    return this.canvas.height;
-  }
-  set canvasHeight(hei){
-    this.canvas.height=hei;
+    let {w,h}=this.size;
+    // this.size={w:can.width, h:can.height};
+    if(can.width>w || can.height>h){
+      console.warn('resizing canvas due to overflowed size!!');
+      this.updateCanvasSize(w,h);
+    }
   }
   init(){
     const sdlOpts=windowOpts.getWindowOpts(this.options);
@@ -135,9 +128,12 @@ class SDLWindow extends EventEmitter{
       console.log("add canvas first!!");
       return;
     }
-    let {width, height}=canvas;
+    let width=canvas.width,
+        height=canvas.height;
     const buffer=canvas.toBuffer("raw");
-    this.context.renderFrame(buffer, width, height);
+    // setTimeout(()=>{
+      this.context.renderFrame(buffer, width, height);
+    // },10);
   }
   ///////////////////////
   ///// misc

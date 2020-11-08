@@ -18,9 +18,9 @@ class SDLContext{
     if(!this.texture) return;
     this.setRGBA(this.color);
     this.clear();
-    this.texture.update(0,0, width, height, pixels);
     width = (this.width < width) ? this.width : width;
     height = (this.height < height) ? this.height : height;
+    this.texture.update(0,0, width, height, pixels);
     this.srcRect.x = 0;
     this.srcRect.y = 0;
     this.srcRect.w = width;

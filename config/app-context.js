@@ -25,11 +25,8 @@ class ApplicationContext extends EventEmitter{
         this.exit();
       }
     });
-    this.on('beforeQuit',()=>{
-      this.window.destroy();
-    });
-    process.on("beforeExit",()=>{
-      this.exit();
+    this.on('close',()=>{
+      this.exit(0);
     });
 
   }
@@ -59,8 +56,9 @@ class ApplicationContext extends EventEmitter{
     }
   }
   exit(exitCode){
-    if(this.window.windowPtr) this.window.destroy();
+    this.window.close();
     sdl.SDL_Quit();
+    clearInterval(this.eventPoll);
     process.exit(exitCode);
   }
 }

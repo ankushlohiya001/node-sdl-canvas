@@ -146,7 +146,7 @@ function getCurrentWindowEvent(win){
       break;
       case sdl.SDL_WindowEventID.SDL_WINDOWEVENT_FOCUS_LOST: eve=["blur"];
       break;
-      case sdl.SDL_WindowEventID.SDL_WINDOWEVENT_CLOSE: win.close();
+      case sdl.SDL_WindowEventID.SDL_WINDOWEVENT_CLOSE: eve=["close"];
       break;
     };
     if(eve.length>0) win.emit(...eve);
