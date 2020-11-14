@@ -5,9 +5,9 @@ function __export(m) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(require("./sdl"));
 __export(require("./sdl-events"));
-__export(require("./sdl-events"));
 __export(require("./sdl-gesture"));
 __export(require("./sdl-joystick"));
+__export(require("./sdl-mouse"));
 __export(require("./sdl-keyboard"));
 __export(require("./sdl-messagebox"));
 __export(require("./sdl-pixels"));

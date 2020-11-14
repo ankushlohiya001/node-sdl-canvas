@@ -14,9 +14,12 @@ class SDLContext{
     this.srcRect={x:0,y:0,w:0,h:0};
     this.destRect={x:0,y:0,w:0,h:0};
   }
+  // setBgColor(color={}){
+  //   this.color={r:color.r, g:color.g, b:color.b, a:color.a};
+  // }
   renderFrame(pixels, width, height){
     if(!this.texture) return;
-    this.setRGBA(this.color);
+    this.updateRGBA();
     this.clear();
     width = (this.width < width) ? this.width : width;
     height = (this.height < height) ? this.height : height;
@@ -55,9 +58,8 @@ class SDLContext{
   get size(){
     return this.renderer.size;
   }
-  setRGBA(rgba){
-    this.color=rgba;
-    this.renderer.color=rgba;
+  updateRGBA(){
+    this.renderer.color=this.color;
   }
 }
 

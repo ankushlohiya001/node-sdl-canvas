@@ -39,6 +39,11 @@ function SDL_GetGlobalMouseState() {
     };
 }
 exports.SDL_GetGlobalMouseState = SDL_GetGlobalMouseState;
+
+function SDL_ShowCursor(state){
+    SDL.SDL_ShowCursor(state?1:0);
+}
+exports.SDL_ShowCursor=SDL_ShowCursor;
 lib_loader_1.loadLibrary({
     SDL_GetMouseFocus: [sdl_video_1.SDL_Window_ptr, []],
     SDL_GetMouseState: [types_1.Uint32, [types_1.int32_ptr, types_1.int32_ptr]],

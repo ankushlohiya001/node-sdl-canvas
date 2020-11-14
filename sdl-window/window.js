@@ -1,5 +1,6 @@
 const sdl=require("./../sdl");
 const EventEmitter=require("events");
+const fs=require("fs");
 const createSDLContext=require("./../sdl-context");
 const windowOpts=require("./options");
 let appContext=require("./../config/app-context");
@@ -135,10 +136,26 @@ class SDLWindow extends EventEmitter{
       this.context.renderFrame(buffer, width, height);
     // },10);
   }
+  static saveAs(canvas, name){
+    const out = fs.createWriteStream(`${name}`);
+    const stream = canvas.createPNGStream();
+    stream.pipe(out);
+    out.on('finish', () =>  console.log(`drawing to file: ${name}`));
+  }
+  saveAs(name="node-sdl-canvas"){
+    if(!this.canvas){
+      console.log("add canvas first!!");
+      return;
+    }
+    SDLWindow.saveAs(this.canvas,name);
+  }
   ///////////////////////
   ///// misc
   grab(will){
     sdl.SDL_SetWindowGrab(this.windowPt, !!will);
+  }
+  showCursor(will){
+    sdl.SDL_ShowCursor(!!will);
   }
   focus(){
     sdl.SDL_RaiseWindow(this.windowPtr);
