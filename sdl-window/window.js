@@ -15,7 +15,6 @@ class SDLWindow extends EventEmitter{
   constructor(options){
     super();
     this.options=options;
-    this._hasMouseEnteredWindow=false;
     this._canvas={};
     this.init();
     appContext.setWindow(this);
@@ -63,22 +62,11 @@ class SDLWindow extends EventEmitter{
         this.emit("keydown",domEve);
         this.lastKeyboardEvent=domEve;
       }
-      else if(event.this===sdl.SDL_EventType.SDL_KEYUP){
+      else if(event.type===sdl.SDL_EventType.SDL_KEYUP){
         let domEve=keyEvent(event,this);
         this.emit("keyup",domEve);
+        if(domEve.key.length===1) this.emit("keypress",domEve);
         this.lastKeyboardEvent=null;
-      }
-      else if(event.this===sdl.SDL_EventType.SDL_TEXTINPUT){
-        let buffer=Buffer.from(event.text.text);
-        let str = buffer.reinterpretUntilZeros(1).toString();
-        let domEve=keyEvent(event,this);
-        domEve.key = str;
-        domEve.keyCode = domEve.charCode = str.codePointAt(0);
-        domEve.ctrlKey = this.lastKeyboardEvent.ctrlKey;
-        domEve.shiftKey = this.lastKeyboardEvent.shiftKey;
-        domEve.altKey = this.lastKeyboardEvent.altKey;
-        domEve.metaKey = this.lastKeyboardEvent.metaKey;
-        this.emit('keypress', domEve);
       }
     });
   }
@@ -93,12 +81,6 @@ class SDLWindow extends EventEmitter{
         event.shiftKey = this.lastKeyboardEvent.shiftKey;
         event.metaKey = this.lastKeyboardEvent.metaKey;
       }
-
-      if (this._hasMouseEnteredWindow) {
-        this.emit('mouseenter', domEvent);
-        this.emit('mouseover', domEvent);
-        this._hasMouseEnteredWindow = false;
-      } 
       this.emit('mousemove', domEvent);
       this.lastMouseEvent = domEvent;
     }
@@ -110,6 +92,10 @@ class SDLWindow extends EventEmitter{
       let domEvent = mouseEvent(event, this);
       this.emit('mouseup', domEvent);
       this.emit('click', domEvent);
+    }
+    else if (event.type === sdl.SDL_EventType.SDL_MOUSEWHEEL) {
+      let domEvent = mouseEvent(event, this);
+      this.emit('wheel', domEvent);
     }
   });
   }
@@ -170,6 +156,9 @@ class SDLWindow extends EventEmitter{
   close(){
     if(!this.options.closable){return;}
     this.destroy();
+  }
+  exit(){
+    appContext.exit();
   }
   center(){
     this.position=[0x2FFF0000, 0x2FFF0000];

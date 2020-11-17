@@ -5,9 +5,6 @@ let keymod = sdl.SDL_Keymod;
 let KMOD_KEYS = Object.keys(keymod);
 let currentKeyEvent = {};
 function getCurrentKeyEvent(sdlEvent, window) {
-    // currentKeyEvent.preventDefault = function () { return window.preventDefault(currentKeyEvent); };
-    // currentKeyEvent.stopImmediatePropagation = function () { return window.stopImmediatePropagation(currentKeyEvent); };
-    // currentKeyEvent.stopPropagation = function () { return window.stopPropagation(currentKeyEvent); };
     let key = sdlEvent.key;
     currentKeyEvent.key = getKey(key);
     let normalizedKey = currentKeyEvent.key
@@ -90,12 +87,13 @@ function getKey(key) {
 
 var currentMouseEvent = {};
 function getCurrentMouseEvent(sdlEvent, window) {
-    // currentMouseEvent.preventDefault = function () { return window.preventDefault(currentMouseEvent); };
-    // currentMouseEvent.stopImmediatePropagation = function () { return window.stopImmediatePropagation(currentMouseEvent); };
-    // currentMouseEvent.stopPropagation = function () { return window.stopPropagation(currentMouseEvent); };
     var mouseButtonEvt = sdlEvent.button;
     var screen = sdl_mouse_1.SDL_GetGlobalMouseState();
     // const button = sdlEvent.button.button;
+    if(sdlEvent.type === sdl.SDL_EventType.SDL_MOUSEWHEEL){
+      currentMouseEvent.deltaX = sdlEvent.wheel.x;
+      currentMouseEvent.deltaY = sdlEvent.wheel.y;
+    }
     currentMouseEvent.screenX = screen.x;
     currentMouseEvent.screenY = screen.y;
     currentMouseEvent.clientX = sdlEvent.motion.x; //  X coordinate, relative to window
@@ -133,14 +131,12 @@ function getCurrentWindowEvent(win){
       break;
       case sdl.SDL_WindowEventID.SDL_WINDOWEVENT_RESTORED: eve=["restore"];
       break;
-      case sdl.SDL_WindowEventID.SDL_WINDOWEVENT_ENTER: win.hasMouseEnteredWindow=true;
-      break;
-      case sdl.SDL_WindowEventID.SDL_WINDOWEVENT_LEAVE:{
-        if(win.lastMouseEvent){
-          eve=["mouseleave", win.lastMouseEvent];
-        }
-        win.hasMouseEnteredWindow=false;
+      case sdl.SDL_WindowEventID.SDL_WINDOWEVENT_ENTER:{
+        win.emit("mouseenter", win.lastMouseEvent);
+        eve=["mouseover", win.lastMouseEvent];
       };
+      break;
+      case sdl.SDL_WindowEventID.SDL_WINDOWEVENT_LEAVE: eve=["mouseleave", win.lastMouseEvent];
       break;
       case sdl.SDL_WindowEventID.SDL_WINDOWEVENT_FOCUS_GAINED: eve=["focus"];
       break;

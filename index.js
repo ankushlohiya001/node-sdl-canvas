@@ -17,9 +17,6 @@ let globalMethods={
     created=true;
     return new sdlWindow(opts); 
   },
-  mainLoop(){
-    sdlWindow.mainLoop();
-  },
   createCanvas(...pars){
     return createCanvas(...pars);
   },
@@ -38,5 +35,5 @@ let globalMethods={
   }
 };
 
-
 module.exports=globalMethods;
+sdlWindow.mainLoop();

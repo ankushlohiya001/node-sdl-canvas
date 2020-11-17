@@ -69,11 +69,14 @@ function createSDLEvent() {
 }
 exports.createSDLEvent = createSDLEvent;
 function pollForEventsForever() {
+    let timEve;
     function forever() {
         SDL.SDL_PollEvent(null);
-        // setTimeout(forever, 10);
+        timEve=setTimeout(forever, 30);
     }
-    return setInterval(forever, 10);
+    forever();
+    return timEve;
+    // return setInterval(forever, 10);
 }
 exports.pollForEventsForever = pollForEventsForever;
 function SDL_PumpEvents() {

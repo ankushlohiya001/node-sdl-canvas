@@ -58,7 +58,7 @@ class ApplicationContext extends EventEmitter{
   exit(exitCode){
     this.window.close();
     sdl.SDL_Quit();
-    clearInterval(this.eventPoll);
+    clearTimeout(this.eventPoll);
     process.exit(exitCode);
   }
 }
