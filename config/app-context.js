@@ -25,9 +25,6 @@ class ApplicationContext extends EventEmitter{
         this.exit();
       }
     });
-    this.on('close',()=>{
-      this.exit(0);
-    });
 
   }
   initEventWatcher(){
@@ -56,7 +53,9 @@ class ApplicationContext extends EventEmitter{
     }
   }
   exit(exitCode){
-    this.window.close();
+    const closed=this.window._close();
+    if(!closed) return;
+    this.window.emit("exit");
     sdl.SDL_Quit();
     clearTimeout(this.eventPoll);
     process.exit(exitCode);

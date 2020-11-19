@@ -56,42 +56,52 @@ class SDLWindow extends EventEmitter{
     this.initKeyEvents();
   }
   initKeyEvents(){
+    this._isKeyDown=false;
     this.on("SDL_EVENT",(event)=>{
       if(event.type===sdl.SDL_EventType.SDL_KEYDOWN){
         let domEve=keyEvent(event,this);
         this.emit("keydown",domEve);
+        if(!this._isKeyDown){
+          this.emit("keypress",domEve);
+          if(domEve.key.length===1) this.emit("keyinput",domEve);
+        }
+        this._isKeyDown=true;
         this.lastKeyboardEvent=domEve;
       }
       else if(event.type===sdl.SDL_EventType.SDL_KEYUP){
         let domEve=keyEvent(event,this);
         this.emit("keyup",domEve);
-        if(domEve.key.length===1) this.emit("keypress",domEve);
-        this.lastKeyboardEvent=null;
+        this._isKeyDown=false;
+        this.lastKeyboardEvent=domEve;
       }
     });
   }
   initMouseEvents(){
+    this._mouseDown=false;
     this.on('SDL_EVENT', (event)=>{
     if (event.type === sdl.SDL_EventType.SDL_MOUSEMOTION) {
       let domEvent = mouseEvent(event, this);
       
-      if (this.lastKeyboardEvent) {
+      if (this._isKeyDown) {
         event.altKey = this.lastKeyboardEvent.altKey;
         event.ctrlKey = this.lastKeyboardEvent.ctrlKey;
         event.shiftKey = this.lastKeyboardEvent.shiftKey;
         event.metaKey = this.lastKeyboardEvent.metaKey;
       }
       this.emit('mousemove', domEvent);
+      if(this._mouseDown) this.emit("drag", domEvent);
       this.lastMouseEvent = domEvent;
     }
     else if (event.type === sdl.SDL_EventType.SDL_MOUSEBUTTONDOWN) {
       let domEvent = mouseEvent(event, this);
       this.emit('mousedown', domEvent);
+      this._mouseDown=true;
     }
     else if (event.type === sdl.SDL_EventType.SDL_MOUSEBUTTONUP) {
       let domEvent = mouseEvent(event, this);
       this.emit('mouseup', domEvent);
       this.emit('click', domEvent);
+      this._mouseDown=false;
     }
     else if (event.type === sdl.SDL_EventType.SDL_MOUSEWHEEL) {
       let domEvent = mouseEvent(event, this);
@@ -149,13 +159,14 @@ class SDLWindow extends EventEmitter{
   restore(){
     sdl.SDL_RestoreWindow(this.windowPtr);
   }
-  destroy(){
+  _destroy(){
     sdl.SDL_DestroyWindow(this.windowPtr);
     this.windowPtr=null;
   }
-  close(){
-    if(!this.options.closable){return;}
-    this.destroy();
+  _close(){
+    if(!this.options.closable){return false;}
+    this._destroy();
+    return true;
   }
   exit(){
     appContext.exit();

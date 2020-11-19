@@ -8,8 +8,8 @@ const {
 }=require("canvas");
 let created=false;
 let globalMethods={
-  createWindow(opts){
-    opts=opts || sdlWindow.windowDefaults();
+  createWindow(opts={}){
+    opts=Object.assign({}, sdlWindow.windowDefaults(), opts);
     if(created){
       console.log(`currently only single window allowed!!`);
       return;
