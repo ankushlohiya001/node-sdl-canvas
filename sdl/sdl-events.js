@@ -71,7 +71,7 @@ exports.createSDLEvent = createSDLEvent;
 function pollForEventsForever() {
     let timEve;
     function forever() {
-        SDL.SDL_PollEvent(null);
+        SDL.SDL_PumpEvents();
         timEve=setTimeout(forever, 30);
     }
     forever();

@@ -12,10 +12,27 @@ const mouseEvent=event.getCurrentMouseEvent;
 const initWindowEvent=event.getCurrentWindowEvent;
 appContext=new appContext();
 class SDLWindow extends EventEmitter{
+  static canvasState=[
+      "textAlign",
+      "textBaseline",
+      "font",
+      "strokeStyle",
+      "fillStyle",
+      "currentTransform",
+      "quality",
+      "lineDashOffset",
+      "lineJoin",
+      "lineCap",
+      "lineWidth",
+      "miterLimit",
+      "globalCompositeOperation"
+  ]
   constructor(options){
     super();
     this.options=options;
     this._canvas={};
+    this._preserveCanvasState=false;
+    this._preservedCanvasState={};
     this.init();
     appContext.setWindow(this);
     setTimeout(()=>{
@@ -110,8 +127,11 @@ class SDLWindow extends EventEmitter{
   });
   }
   updateCanvasSize(w, h){
+    this.saveCanvasState();
+    if(this.canvas.getContext) console.log(this.canvas.getContext("2d").lineWidth);
     this.canvas.width=w;
     this.canvas.height=h;
+    this.restoreCanvasState();
   }
   updateWindowSize(w, h){
     this._size={w, h};
@@ -131,6 +151,27 @@ class SDLWindow extends EventEmitter{
     // setTimeout(()=>{
       this.context.renderFrame(buffer, width, height);
     // },10);
+  }
+  get preserveCanvasState(){
+    return this._preserveCanvasState;
+  }
+  set preserveCanvasState(will){
+    this._preserveCanvasState=!!will;
+  }
+  saveCanvasState(){
+    if(!this.canvas.getContext) return;
+    const ctx=this.canvas.getContext("2d");
+    for(let key of SDLWindow.canvasState){
+      this._preservedCanvasState[key]=ctx[key];
+    }
+  }
+  restoreCanvasState(){
+    if(!this.canvas.getContext) return;
+    const ctx=this.canvas.getContext("2d");
+    for(let key of SDLWindow.canvasState){
+      ctx[key]=this._preservedCanvasState[key];
+    }
+    this._preservedCanvasState={};
   }
   static saveAs(canvas, name){
     const out = fs.createWriteStream(`${name}`);
