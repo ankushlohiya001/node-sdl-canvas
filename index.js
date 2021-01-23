@@ -36,4 +36,3 @@ let globalMethods={
 };
 
 module.exports=globalMethods;
-sdlWindow.mainLoop();

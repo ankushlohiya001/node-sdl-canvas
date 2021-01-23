@@ -1,5 +1,5 @@
 const engine=require("./../");
-engine.mainLoop();
+// engine.mainLoop();
 const win=engine.createWindow({
   title: "clock sample",
   width: 1280,

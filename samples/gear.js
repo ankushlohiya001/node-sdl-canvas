@@ -180,8 +180,9 @@ function changeEve(deltaY){
 }
 let i=0;
 
-win.on("wheel",(eve)=>{
-  const deltaY=i+Math.random();
+win.on("drag",(eve)=>{
+    console.log("p");
+  const deltaY=0;
   changeEve(deltaY);
 });
 

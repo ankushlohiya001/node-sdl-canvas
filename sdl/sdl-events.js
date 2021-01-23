@@ -87,6 +87,12 @@ function SDL_PollEvent(sdlEvent) {
     return SDL.SDL_PollEvent(sdlEvent);
 }
 exports.SDL_PollEvent = SDL_PollEvent;
+
+function SDL_FlushEvent(eventType) {
+    return SDL.SDL_FlushEvent(eventType);
+}
+exports.SDL_FlushEvent = SDL_FlushEvent;
+
 function createEventFilterFunction(filter) {
     return exports.SDL_EventFilter.toPointer(filter);
 }

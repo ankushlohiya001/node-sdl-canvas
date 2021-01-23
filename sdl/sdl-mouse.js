@@ -44,6 +44,17 @@ function SDL_ShowCursor(state){
     SDL.SDL_ShowCursor(state?1:0);
 }
 exports.SDL_ShowCursor=SDL_ShowCursor;
+
+function SDL_SetCursor(type){
+    SDL.SDL_SetCursor(type);
+}
+exports.SDL_SetCursor=SDL_SetCursor;
+
+function SDL_CreateSystemCursor(type){
+    return SDL.SDL_CreateSystemCursor(type);
+}
+exports.SDL_CreateSystemCursor=SDL_CreateSystemCursor;
+
 lib_loader_1.loadLibrary({
     SDL_GetMouseFocus: [sdl_video_1.SDL_Window_ptr, []],
     SDL_GetMouseState: [types_1.Uint32, [types_1.int32_ptr, types_1.int32_ptr]],

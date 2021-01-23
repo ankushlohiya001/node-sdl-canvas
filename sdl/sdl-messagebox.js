@@ -18,7 +18,7 @@ function SDL_Create_MessageBoxButtonData(buttons) {
         if (type === 'yes') {
             flags = SDL_MessageBoxButtonFlags.SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT;
         }
-        else if (type = 'cancel') {
+        else if (type === 'cancel') {
             flags = SDL_MessageBoxButtonFlags.SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT;
         }
         ref.set(buttonData, index * size, new exports.SDL_MessageBoxButtonData({

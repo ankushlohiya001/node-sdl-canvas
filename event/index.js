@@ -91,8 +91,8 @@ function getCurrentMouseEvent(sdlEvent, window) {
     var screen = sdl_mouse_1.SDL_GetGlobalMouseState();
     // const button = sdlEvent.button.button;
     if(sdlEvent.type === sdl.SDL_EventType.SDL_MOUSEWHEEL){
-      currentMouseEvent.deltaX = sdlEvent.wheel.x;
-      currentMouseEvent.deltaY = sdlEvent.wheel.y;
+      currentMouseEvent.deltaX = sdlEvent.wheel.x*20;
+      currentMouseEvent.deltaY = sdlEvent.wheel.y*20;
     }
     currentMouseEvent.screenX = screen.x;
     currentMouseEvent.screenY = screen.y;
@@ -119,6 +119,8 @@ function getCurrentWindowEvent(win){
       case sdl.SDL_WindowEventID.SDL_WINDOWEVENT_HIDDEN: eve=["hide"];
       break;
       case sdl.SDL_WindowEventID.SDL_WINDOWEVENT_MOVED: eve=["move",event.window.data1,event.window.data2];
+      break;
+      case sdl.SDL_WindowEventID.SDL_WINDOWEVENT_SIZE_CHANGED: eve=["sizechange",event.window.data1,event.window.data2];
       break;
       case sdl.SDL_WindowEventID.SDL_WINDOWEVENT_RESIZED:{
         win.updateWindowSize(event.window.data1,event.window.data2);

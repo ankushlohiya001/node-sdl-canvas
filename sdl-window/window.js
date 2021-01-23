@@ -6,7 +6,8 @@ const windowOpts=require("./options");
 let appContext=require("./../config/app-context");
 const event=require("./../event");
 const createCanvas=require("canvas").createCanvas;
-
+const createPopup=require("./popup");
+const setCursor=require("./cursor");
 const keyEvent=event.getCurrentKeyEvent;
 const mouseEvent=event.getCurrentMouseEvent;
 const initWindowEvent=event.getCurrentWindowEvent;
@@ -68,9 +69,16 @@ class SDLWindow extends EventEmitter{
     this.initEvents();
   }
   initEvents(){
-    initWindowEvent(this);
+    this.initWindowEvents();
     this.initMouseEvents();
     this.initKeyEvents();
+  }
+  initWindowEvents(){
+    initWindowEvent(this);
+    this.on("close", ()=>{
+      if(!this.closable) return;
+      this.exit();
+    })
   }
   initKeyEvents(){
     this._isKeyDown=false;
@@ -128,7 +136,6 @@ class SDLWindow extends EventEmitter{
   }
   updateCanvasSize(w, h){
     this.saveCanvasState();
-    if(this.canvas.getContext) console.log(this.canvas.getContext("2d").lineWidth);
     this.canvas.width=w;
     this.canvas.height=h;
     this.restoreCanvasState();
@@ -189,7 +196,10 @@ class SDLWindow extends EventEmitter{
   ///////////////////////
   ///// misc
   grab(will){
-    sdl.SDL_SetWindowGrab(this.windowPt, !!will);
+    sdl.SDL_SetWindowGrab(this.windowPtr, !!will);
+  }
+  setCursor(cursor){
+    setCursor(cursor);
   }
   showCursor(will){
     sdl.SDL_ShowCursor(!!will);
@@ -200,16 +210,18 @@ class SDLWindow extends EventEmitter{
   restore(){
     sdl.SDL_RestoreWindow(this.windowPtr);
   }
-  _destroy(){
+  destroy(){
     sdl.SDL_DestroyWindow(this.windowPtr);
     this.windowPtr=null;
   }
-  _close(){
+  close(){
     if(!this.options.closable){return false;}
-    this._destroy();
+    this.destroy();
+    this.context.destroy();
     return true;
   }
   exit(){
+    this.close();
     appContext.exit();
   }
   center(){
@@ -244,33 +256,42 @@ class SDLWindow extends EventEmitter{
   get resizable(){
     return !!(sdl.SDL_GetWindowFlags(this.windowPtr) & sdl.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
   }
+  
   set resizable(value){
     sdl.SDL_SetWindowResizable(this.windowPtr, !!value);
   }
-  get closabale(){
-    return this.options.closabale;
+  
+  get closable(){
+    return this.options.closable;
   }
-  set closabale(able){
-    this.options.closabale=!!able;
+  
+  set closable(able){
+    this.options.closable=!!able;
   }
+  
   get position(){
     return sdl.SDL_GetWindowPosition(this.windowPtr);
   }
+  
   set position(pos){
     let position = this.position;
     let x = pos.x >= 0 ? pos.x : (pos[0] >= 0 ? pos[0] : position.x);
     let y = pos.y >= 0 ? pos.y : (pos[1] >= 0 ? pos[1] : position.y);
     sdl.SDL_SetWindowPosition(this.windowPtr, x, y);
   }
+  
   get title(){
     return sdl.SDL_GetWindowTitle(this.windowPtr);
   }
+  
   set title(title="p5nodejs"){
     sdl.SDL_SetWindowTitle(this.windowPtr, title);
   }
+  
   get show(){
     return !!(sdl.SDL_GetWindowFlags(this.windowPtr) & sdl.SDL_WindowFlags.SDL_WINDOW_SHOWN);
   }
+  
   set show(show){
     if(!!show){
       sdl.SDL_ShowWindow(this.windowPtr);
@@ -281,8 +302,13 @@ class SDLWindow extends EventEmitter{
   set border(border){
     sdl.SDL_SetWindowBordered(this.windowPtr, !!border);
   }
-  static mainLoop(){
-    appContext.mainLoop();
+
+  alert(message){
+    return createPopup("alert",message, this.windowPtr);
+  }
+
+  confirm(message){
+    return createPopup("confirm",message, this.windowPtr);
   }
   static windowDefaults(){
     return windowOpts.windowOpts();
