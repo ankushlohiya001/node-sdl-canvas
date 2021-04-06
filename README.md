@@ -6,5 +6,3 @@ as browser itself takes too much resources, and for javascript developer that's 
 as the name suggests,, node-sdl-canvas use three technologies,, SDL, Canvas and Nodejs,,
 
 same performant as browser htmlcanvas,, in some case even more performant
-
-*node-sdl-canvas is inspired by native-canvas..(author @mcchatman8009)
