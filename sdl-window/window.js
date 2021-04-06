@@ -28,6 +28,7 @@ class SDLWindow extends EventEmitter{
       "miterLimit",
       "globalCompositeOperation"
   ]
+
   constructor(options){
     super();
     this.options=options;
@@ -40,17 +41,21 @@ class SDLWindow extends EventEmitter{
       this.emit("load");
     },100);
   }
+
   get size(){
     return this._size;
   }
+
   set size(size){
     let {w, h}=size;
     sdl.SDL_SetWindowSize(this.windowPtr, w, h);
     this.updateWindowSize(w, h);
   }
+
   get canvas(){
     return this._canvas;
   }
+
   set canvas(can){
     this._canvas=can;
     let {w,h}=this.size;
@@ -60,6 +65,19 @@ class SDLWindow extends EventEmitter{
       this.updateCanvasSize(w,h);
     }
   }
+
+  initGLContext(){
+    if(this.glContextPtr) return;
+    this.glContextPtr=sdl.SDL_GL_CreateContext(this.windowPtr);
+  }
+
+  deleteGLContext(){
+    if(this.glContextPtr){
+      sdl.SDL_GL_DeleteContext(this.glContextPtr);
+      this.glContextPtr=null;
+    }
+  }
+
   init(){
     const sdlOpts=windowOpts.getWindowOpts(this.options);
     this.windowPtr=sdl.SDL_CreateWindow(sdlOpts.title, sdlOpts.x, sdlOpts.y, sdlOpts.w, sdlOpts.h, sdlOpts.flags);
@@ -68,11 +86,13 @@ class SDLWindow extends EventEmitter{
     this.updateWindowSize(sdlOpts.w, sdlOpts.h);
     this.initEvents();
   }
+
   initEvents(){
     this.initWindowEvents();
     this.initMouseEvents();
     this.initKeyEvents();
   }
+
   initWindowEvents(){
     initWindowEvent(this);
     this.on("close", ()=>{
@@ -80,6 +100,7 @@ class SDLWindow extends EventEmitter{
       this.exit();
     })
   }
+
   initKeyEvents(){
     this._isKeyDown=false;
     this.on("SDL_EVENT",(event)=>{
@@ -101,51 +122,56 @@ class SDLWindow extends EventEmitter{
       }
     });
   }
+  
   initMouseEvents(){
     this._mouseDown=false;
     this.on('SDL_EVENT', (event)=>{
+    let domEvent = mouseEvent(event, this);
+    
+    if (this._isKeyDown) {
+      domEvent.altKey = this.lastKeyboardEvent.altKey;
+      domEvent.ctrlKey = this.lastKeyboardEvent.ctrlKey;
+      domEvent.shiftKey = this.lastKeyboardEvent.shiftKey;
+      domEvent.metaKey = this.lastKeyboardEvent.metaKey;
+    }
+    
     if (event.type === sdl.SDL_EventType.SDL_MOUSEMOTION) {
-      let domEvent = mouseEvent(event, this);
-      
-      if (this._isKeyDown) {
-        event.altKey = this.lastKeyboardEvent.altKey;
-        event.ctrlKey = this.lastKeyboardEvent.ctrlKey;
-        event.shiftKey = this.lastKeyboardEvent.shiftKey;
-        event.metaKey = this.lastKeyboardEvent.metaKey;
-      }
       this.emit('mousemove', domEvent);
       if(this._mouseDown) this.emit("drag", domEvent);
       this.lastMouseEvent = domEvent;
     }
     else if (event.type === sdl.SDL_EventType.SDL_MOUSEBUTTONDOWN) {
-      let domEvent = mouseEvent(event, this);
       this.emit('mousedown', domEvent);
+      if(domEvent.dblClick){
+        this.emit("dblclick", domEvent);
+      }
       this._mouseDown=true;
     }
     else if (event.type === sdl.SDL_EventType.SDL_MOUSEBUTTONUP) {
-      let domEvent = mouseEvent(event, this);
       this.emit('mouseup', domEvent);
       this.emit('click', domEvent);
       this._mouseDown=false;
     }
     else if (event.type === sdl.SDL_EventType.SDL_MOUSEWHEEL) {
-      let domEvent = mouseEvent(event, this);
       this.emit('wheel', domEvent);
     }
   });
   }
+  
   updateCanvasSize(w, h){
-    this.saveCanvasState();
+    if(this.preserveCanvasState) this.saveCanvasState();
     this.canvas.width=w;
     this.canvas.height=h;
-    this.restoreCanvasState();
+    if(this.preserveCanvasState) this.restoreCanvasState();
   }
+  
   updateWindowSize(w, h){
     this._size={w, h};
     this.context.size={w, h};
     this.updateCanvasSize(w, h);
     this.emit('change', w, h);
   }
+  
   render(){
     let canvas=this.canvas;
     if(!canvas){
@@ -159,12 +185,15 @@ class SDLWindow extends EventEmitter{
       this.context.renderFrame(buffer, width, height);
     // },10);
   }
+  
   get preserveCanvasState(){
     return this._preserveCanvasState;
   }
+  
   set preserveCanvasState(will){
     this._preserveCanvasState=!!will;
   }
+  
   saveCanvasState(){
     if(!this.canvas.getContext) return;
     const ctx=this.canvas.getContext("2d");
@@ -172,6 +201,7 @@ class SDLWindow extends EventEmitter{
       this._preservedCanvasState[key]=ctx[key];
     }
   }
+  
   restoreCanvasState(){
     if(!this.canvas.getContext) return;
     const ctx=this.canvas.getContext("2d");
@@ -180,61 +210,78 @@ class SDLWindow extends EventEmitter{
     }
     this._preservedCanvasState={};
   }
-  static saveAs(canvas, name){
+  
+  static saveAs(canvas, name, after){
     const out = fs.createWriteStream(`${name}`);
     const stream = canvas.createPNGStream();
     stream.pipe(out);
-    out.on('finish', () =>  console.log(`drawing to file: ${name}`));
+    out.on('finish', () =>{
+      console.log(`drawing to file: ${name}`);
+      if(typeof after=="function") after();
+    });
   }
-  saveAs(name="node-sdl-canvas"){
+  
+  saveAs(name="node-sdl-canvas", after){
     if(!this.canvas){
       console.log("add canvas first!!");
       return;
     }
-    SDLWindow.saveAs(this.canvas,name);
+    SDLWindow.saveAs(this.canvas,name, after);
   }
   ///////////////////////
   ///// misc
+  
   grab(will){
     sdl.SDL_SetWindowGrab(this.windowPtr, !!will);
   }
+  
   setCursor(cursor){
     setCursor(cursor);
   }
+  
   showCursor(will){
     sdl.SDL_ShowCursor(!!will);
   }
+  
   focus(){
     sdl.SDL_RaiseWindow(this.windowPtr);
   }
+  
   restore(){
     sdl.SDL_RestoreWindow(this.windowPtr);
   }
+  
   destroy(){
+    this.deleteGLContext();
     sdl.SDL_DestroyWindow(this.windowPtr);
     this.windowPtr=null;
   }
+  
   close(){
     if(!this.options.closable){return false;}
     this.destroy();
     this.context.destroy();
     return true;
   }
+  
   exit(){
     this.close();
     appContext.exit();
   }
+  
   center(){
     this.position=[0x2FFF0000, 0x2FFF0000];
   }
+  
   fullscreen(full=null){
-    if(full===null) return !!(sdl.SDL_GetWindowFlags(this.windowPtr) & sdl.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN);
+    if(full===null) return !!(sdl.SDL_GetWindowFlags(this.windowPtr) & sdl.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN_DESKTOP);
     if(!!full){
       sdl.SDL_SetWindowFullscreen(this.windowPtr, sdl.SDL_WindowFlags.SDL_WINDOW_FULLSCREEN_DESKTOP);
     }else{
       sdl.SDL_SetWindowFullscreen(this.windowPtr, 0);
     }
   }
+  
   minimize(mini=null){
     if(mini===null) return !!(sdl.SDL_GetWindowFlags(this.windowPtr) & sdl.SDL_WindowFlags.SDL_WINDOW_MINIMIZED);
     if(!!mini){
@@ -243,6 +290,7 @@ class SDLWindow extends EventEmitter{
       this.restore();
     }
   }
+  
   maximize(mini=null){
     if(mini===null) return !!(sdl.SDL_GetWindowFlags(this.windowPtr) & sdl.SDL_WindowFlags.SDL_WINDOW_MAXIMIZED);
     if(!!mini){
@@ -253,6 +301,7 @@ class SDLWindow extends EventEmitter{
   }
   /////////////////////////
   //// misc getter setter
+  
   get resizable(){
     return !!(sdl.SDL_GetWindowFlags(this.windowPtr) & sdl.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
   }

@@ -154,6 +154,22 @@ function SDL_CreateWindow(title, x, y, w, h, flags) {
     return SDL.SDL_CreateWindow(title, x, y, w, h, flags);
 }
 exports.SDL_CreateWindow = SDL_CreateWindow;
+
+function SDL_GL_CreateContext(windowPtr){
+    return SDL.SDL_GL_CreateContext(windowPtr);
+}
+exports.SDL_GL_CreateContext = SDL_GL_CreateContext;
+
+function SDL_GL_DeleteContext(glPtr){
+    return SDL.SDL_GL_DeleteContext(glPtr);
+}
+exports.SDL_GL_DeleteContext = SDL_GL_DeleteContext;
+
+function SDL_GL_SwapWindow(windowPtr){
+    return SDL.SDL_GL_SwapWindow(windowPtr);
+}
+exports.SDL_GL_SwapWindow = SDL_GL_SwapWindow;
+
 var SDL_WindowFlags;
 (function (SDL_WindowFlags) {
     SDL_WindowFlags[SDL_WindowFlags["SDL_WINDOW_FULLSCREEN"] = 1] = "SDL_WINDOW_FULLSCREEN";

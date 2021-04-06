@@ -98,13 +98,12 @@ function getCurrentMouseEvent(sdlEvent, window) {
     currentMouseEvent.screenY = screen.y;
     currentMouseEvent.clientX = sdlEvent.motion.x; //  X coordinate, relative to window
     currentMouseEvent.clientY = sdlEvent.motion.y; // Y coordinate, relative to window
-    currentMouseEvent.pageX = sdlEvent.motion.x;
-    currentMouseEvent.pageY = sdlEvent.motion.y;
     currentMouseEvent.relatedTarget = window.canvas;
     currentMouseEvent.ctrlKey = false;
     currentMouseEvent.shiftKey = false;
     currentMouseEvent.altKey = false;
     currentMouseEvent.metaKey = false;
+    currentMouseEvent.dblClick = sdlEvent.button.clicks===2;
     var key = sdlEvent.key;
     currentMouseEvent.which = currentMouseEvent.button = (mouseButtonEvt.button);
     return currentMouseEvent;

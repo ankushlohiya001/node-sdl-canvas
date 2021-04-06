@@ -72,7 +72,7 @@ function pollForEventsForever() {
     let timEve;
     function forever() {
         SDL.SDL_PumpEvents();
-        timEve=setTimeout(forever, 30);
+        timEve=setTimeout(forever, 10);
     }
     forever();
     return timEve;
