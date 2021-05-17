@@ -1,38 +1,55 @@
-const path=require("path");
-const sdlWindow=require("./sdl-window/window");
+const path = require("path");
+const fs = require("fs");
+const Window = require("./window/window");
+const ApplicationContext = require("./app");
+const appContext = new ApplicationContext();
+
 const {
   createCanvas,
   loadImage,
   registerFont,
   createImageData
-}=require("canvas");
-let created=false;
-let globalMethods={
-  createWindow(opts={}){
-    opts=Object.assign({}, sdlWindow.windowDefaults(), opts);
-    if(created){
-      console.log(`currently only single window allowed!!`);
-      return;
-    }
-    created=true;
-    return new sdlWindow(opts); 
+} = require("canvas");
+
+const globalMethods = {
+  mainLoop() {
+    ApplicationContext.pollEventsForever();
   },
-  createCanvas(...pars){
+
+  createWindow(...params) {
+    const window = new Window(...params);
+    appContext.addWindow(window);
+    return window;
+  },
+
+  createCanvas(...pars) {
     return createCanvas(...pars);
   },
-  createImageData(...pars){
+
+  createImageData(...pars) {
     return createImageData(...pars);
   },
-  loadImage(...pars){
+
+  loadImage(...pars) {
     return loadImage(...pars);
   },
-  loadFont(src,family){
-    family=family || path.basename(src).split(path.extname(src))[0];
-    registerFont(src,{family});
+
+  loadFont(src, family) {
+    family = family || path.basename(src).split(path.extname(src))[0];
+    registerFont(src, {
+      family
+    });
   },
-  saveAs(...pars){
-    return sdlWindow.saveAs(...pars);
+
+  saveAs(canvas, name, after) {
+    const out = fs.createWriteStream(`${name}`);
+    const stream = canvas.createPNGStream();
+    stream.pipe(out);
+    out.on('finish', () => {
+      console.log(`drawing to file: ${name}`);
+      if (typeof after == "function") after();
+    });
   }
 };
 
-module.exports=globalMethods;
+module.exports = globalMethods;
