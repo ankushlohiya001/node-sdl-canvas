@@ -87,15 +87,15 @@ function hands(w, h, rad) {
   ctx.fillStyle = "#f42b";
   ctx.arc(w / 2, h / 2, 15, 0, 44 / 7);
   ctx.fill();
-  ctx.beginPath();
-  let pos = ctx.measureText(`${sep[0]} : ${sep[1]} : ${sep[2]}`).width;
-  ctx.fillStyle = "#24f8";
-  ctx.fillRect(w / 2 - pos / 2 - 10, h / 2 + 50, pos + 20, 70);
-  ctx.beginPath();
-  ctx.font = `50px inter`;
-  ctx.fillStyle = "#bbb";
-  ctx.fillText(`${sep[0]} : ${sep[1]} : ${sep[2]}`,
-    w / 2 - ctx.measureText(`${sep[0]} : ${sep[1]} : ${sep[2]}`).width / 2, h / 2 + 100);
+  // ctx.beginPath();
+  // let pos = ctx.measureText(`${sep[0]} : ${sep[1]} : ${sep[2]}`).width;
+  // ctx.fillStyle = "#24f8";
+  // ctx.fillRect(w / 2 - pos / 2 - 10, h / 2 + 50, pos + 20, 70);
+  // ctx.beginPath();
+  // ctx.font = `50px inter`;
+  // ctx.fillStyle = "#bbb";
+  // ctx.fillText(`${sep[0]} : ${sep[1]} : ${sep[2]}`,
+  //   w / 2 - ctx.measureText(`${sep[0]} : ${sep[1]} : ${sep[2]}`).width / 2, h / 2 + 100);
   ctx.beginPath();
 }
 

@@ -23,9 +23,9 @@ function loop(ang = 0, len = 0) {
   ctx.scale(1.5, 1.5);
   ctx.fillStyle = "skyblue";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.font = "72px inter";
+  ctx.font = "36px inter";
   ctx.fillStyle = "teal";
-  ctx.fillText("pacman", 310, len - 200);
+  ctx.fillText("node-sdl-canvas", 310, len - 200);
   ctx.fillStyle = "tomato";
   ctx.fillRect(0, len, canvas.width, canvas.height);
   ctx.lineWidth = 4;
@@ -173,19 +173,15 @@ win.on("resize", () => {
   loop();
 });
 
-function changeEve(deltaY) {
-  let test = length + deltaY;
+function changeEve(delta) {
+  let test = length + delta;
   if (test < 0 || test > max) return;
-  loop(
-    angle += deltaY, length += deltaY
-  );
+  loop(angle += delta, length += delta);
 }
 let i = 0;
 
-win.on("drag", (eve) => {
-  console.log("p");
-  const deltaY = 0;
-  changeEve(deltaY);
+win.on("wheel", (eve) => {
+  changeEve(eve.delta * 20);
 });
 
 win.on("click", () => {})

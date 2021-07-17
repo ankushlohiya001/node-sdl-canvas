@@ -14,6 +14,7 @@ class Window extends EventEmitter {
     let flags = 0;
     flags |= sdl.SDL_WindowFlags.SDL_WINDOW_OPENGL;
     flags |= resizable ? sdl.SDL_WindowFlags.SDL_WINDOW_RESIZABLE : 0;
+    flags |= sdl.SDL_WindowFlags.SDL_WINDOW_SHOWN;
     // flags |= sdl.SDL_WindowFlags.SDL_WINDOW_ALLOW_HIGHDPI;
     return flags;
   }
@@ -39,6 +40,7 @@ class Window extends EventEmitter {
     this._grab = false;
     this._fullscreen = false;
     this._cursorShown = true;
+    this._waitingForEvents = false;
 
     Object.defineProperty(this, "displayPixelRatio", {
       value: 1.0
@@ -67,6 +69,12 @@ class Window extends EventEmitter {
 
   get id() {
     return this._id;
+  }
+
+  on(eveName, eveFun) {
+    super.on(eveName, async(eve) => {
+      await eveFun(eve);
+    });
   }
 
   /////////////////////////////

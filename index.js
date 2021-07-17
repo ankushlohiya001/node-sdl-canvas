@@ -12,9 +12,7 @@ const {
 } = require("canvas");
 
 const globalMethods = {
-  mainLoop() {
-    ApplicationContext.pollEventsForever();
-  },
+  mainLoop: ApplicationContext.mainLoop,
 
   createWindow(...params) {
     const window = new Window(...params);

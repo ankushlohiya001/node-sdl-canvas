@@ -1,5 +1,4 @@
 const sdl=require("./../sdl");
-const ref=require("ref-napi");
 
 function createPopup(type, message, win){
 	const infoPopupData=sdl.SDL_Create_MessageBoxButtonData([]);

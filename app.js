@@ -1,14 +1,14 @@
 const EventEmitter = require("events");
 const sdl = require("./sdl");
-const setupEventWatcher = require("./events");
+const eventWatcher= require("./events");
+
 class ApplicationContext extends EventEmitter {
-  static eventFilterFunction = null;
   static loopId = null;
-  static pollEventsForever() {
+  static mainLoop() {
     if (ApplicationContext.loopId) return;
     (function loop() {
-      sdl.SDL_PollEvent(null);
-      ApplicationContext.loopId = setTimeout(loop, 17);
+      eventWatcher.eventPolling();
+      ApplicationContext.loopId = setTimeout(loop, 10);
     })();
   }
 
@@ -34,7 +34,7 @@ class ApplicationContext extends EventEmitter {
     this.windows.count++;
     win.appContext = this;
     if (this.windows.count === 1) {
-      setupEventWatcher(this.windows);
+      eventWatcher.setWindowList(this.windows);
     }
   }
 

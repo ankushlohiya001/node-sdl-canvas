@@ -44,7 +44,7 @@ class SDLContext {
 
   set size(size) {
     if (this.texture) {
-      this.texture.destroy();
+      // this.texture.destroy(); // destroying texture cause crashes, so tmp fix.
       this.texture = null;
     }
     this.renderer.size = [size[0], size[1]];
