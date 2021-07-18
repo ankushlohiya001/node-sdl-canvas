@@ -9,6 +9,7 @@ class SDLTexture{
 
   destroy(){
     sdl.SDL_DestroyTexture(this.texturePtr);
+    this.texturePtr = null;
   }
 
   update(x, y, w, h, pixels){
@@ -32,18 +33,11 @@ class SDLTexture{
   }
 
   static createDynamicTexture(renderer, width, height){
-    let format = SDLTexture.getARGBFormat();
-    return SDLTexture.createTexture(renderer, width, height, sdl.SDL_TEXTUREACCESS_TARGET, format);
+    let format = SDLTexture.ARGBFormat;
+    return SDLTexture.createTexture(renderer, width, height, sdl.SDL_TEXTUREACCESS_STREAMING, format);
   }
   
-  static getARGBFormat() {
-    let bpp = 32;
-    let rmask = 0x00FF0000;
-    let gmask = 0x0000FF00;
-    let bmask = 0x000000FF;
-    let amask = 0xFF000000;
-    return sdl.SDL_MasksToPixelFormatEnum(bpp, rmask, gmask, bmask, amask);
-  }
+  static ARGBFormat = sdl.SDL_MasksToPixelFormatEnum(32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
 }
 
 module.exports=SDLTexture;

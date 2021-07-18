@@ -71,12 +71,6 @@ class Window extends EventEmitter {
     return this._id;
   }
 
-  on(eveName, eveFun) {
-    super.on(eveName, async(eve) => {
-      await eveFun(eve);
-    });
-  }
-
   /////////////////////////////
   /////// init window, context
   /////////////

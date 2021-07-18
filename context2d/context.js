@@ -20,9 +20,8 @@ class SDLContext {
 
   renderFrame(pixels, width, height) {
     if (!this.texture) return;
-    const [wid, hei] = this.size;
+    // const [wid, hei] = this.size;
     this.renderer.clear();
-    this.renderer.target = this.texture.texturePtr;
     this.texture.update(0, 0, width, height, pixels);
     this.srcRect.x = 0;
     this.srcRect.y = 0;
@@ -32,20 +31,17 @@ class SDLContext {
     this.destRect.y = 0;
     this.destRect.w = width / this.pixelRatio;
     this.destRect.h = height / this.pixelRatio;
-    this.renderer.target = null;
     this.renderer.copy(this.texture, this.srcRect, this.destRect);
     this.renderer.present();
   }
 
   destroy() {
     this.renderer.destroy();
-    this.renderer = null;
   }
 
   set size(size) {
     if (this.texture) {
-      // this.texture.destroy(); // destroying texture cause crashes, so tmp fix.
-      this.texture = null;
+      this.texture.destroy(); // destroying texture cause crashes, so tmp fix.
     }
     this.renderer.size = [size[0], size[1]];
     this.texture = Texture.createDynamicTexture(this.renderer, size[0] * this.pixelRatio, size[1] * this.pixelRatio);

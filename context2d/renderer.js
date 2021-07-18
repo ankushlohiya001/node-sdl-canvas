@@ -26,6 +26,7 @@ class SDLRenderer {
 
   destroy() {
     sdl.SDL_DestroyRenderer(this.rendererPtr);
+    this.rendererPtr = null;
   }
 
   clear() {

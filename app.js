@@ -8,7 +8,7 @@ class ApplicationContext extends EventEmitter {
     if (ApplicationContext.loopId) return;
     (function loop() {
       eventWatcher.eventPolling();
-      ApplicationContext.loopId = setTimeout(loop, 10);
+      ApplicationContext.loopId = setTimeout(loop, 17);
     })();
   }
 
