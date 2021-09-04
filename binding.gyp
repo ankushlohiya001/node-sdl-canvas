@@ -6,10 +6,11 @@
 				"src/sdl.cc",
 				"src/video.cc",
 				"src/render.cc",
-				"src/events.cc"
+				"src/events.cc",
+				"src/opengl.cc"
 			],
 			"include_dirs": ["<!(node -p \"require('node-addon-api').include_dir\")"],
-			"libraries": ["<!@(sdl2-config --libs)"],
+			"libraries": ["<!@(sdl2-config --libs)", "<!@(pkg-config opengl --libs)"],
 			"cflags": ["<!@(sdl2-config --cflags)"],
 			"cflags!": [ "-fno-exceptions" ],
 			"cflags_cc!": [ "-fno-exceptions" ],

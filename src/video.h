@@ -5,24 +5,6 @@
 #include <SDL.h>
 
 namespace Video{
-	// Napi::Value GetNumDisplayMode(const Napi::CallbackInfo&);
-	// Napi::Value GetDisplayMode(const Napi::CallbackInfo&);
-	// Napi::Value GetDesktopDisplayMode(const Napi::CallbackInfo&);
-	// Napi::Value GetCurrentDisplayMode(const Napi::CallbackInfo&);
-	// Napi::Value GetClosestDisplayMode(const Napi::CallbackInfo&);
-	// Napi::Value SetWindowDisplayMode(const Napi::CallbackInfo&);
-	// Napi::Value GetWindowDisplayMode(const Napi::CallbackInfo&);
-
-	// Napi::Object DisplayMode(Napi::Env& env){
-	// 	Napi::Object obj = Napi::Object::New(env);
-	// 	obj.Set(Napi::String::New(env, "getNumDisplayMode"), Napi::Function::New(env, GetNumDisplayMode));
-	// 	obj.Set(Napi::String::New(env, "getDisplayMode"), Napi::Function::New(env, GetDisplayMode));
-	// 	obj.Set(Napi::String::New(env, "getDesktopDisplayMode"), Napi::Function::New(env, GetDesktopDisplayMode));
-	// 	obj.Set(Napi::String::New(env, "getCurrentDisplayMode"), Napi::Function::New(env, GetCurrentDisplayMode));
-	// 	obj.Set(Napi::String::New(env, "getClosestDisplayMode"), Napi::Function::New(env, GetClosestDisplayMode));
-	// 	obj.Set(Napi::String::New(env, "setWindowDisplayMode"), Napi::Function::New(env, SetWindowDisplayMode));
-	// 	obj.Set(Napi::String::New(env, "getWindowDisplayMode"), Napi::Function::New(env, GetWindowDisplayMode));
-	// }
 
 	class Window : public Napi::ObjectWrap<Window>{
 	public:
@@ -30,6 +12,7 @@ namespace Video{
 		
 		Napi::Value getTitle(const Napi::CallbackInfo&);
 		void setTitle(const Napi::CallbackInfo&, const Napi::Value&);
+		void setIcon(const Napi::CallbackInfo&);
 		
 		Napi::Value getPosition(const Napi::CallbackInfo&);
 		void setPosition(const Napi::CallbackInfo&, const Napi::Value&);
@@ -37,14 +20,45 @@ namespace Video{
 		Napi::Value getSize(const Napi::CallbackInfo&);
 		void setSize(const Napi::CallbackInfo&, const Napi::Value&);
 
+		Napi::Value getMinSize(const Napi::CallbackInfo&);
+		void setMinSize(const Napi::CallbackInfo&, const Napi::Value&);
+
+		Napi::Value getMaxSize(const Napi::CallbackInfo&);
+		void setMaxSize(const Napi::CallbackInfo&, const Napi::Value&);
+
 		Napi::Value getId(const Napi::CallbackInfo&);
 		Napi::Value isDestroyed(const Napi::CallbackInfo&);
 
-		void showBorder(const Napi::CallbackInfo&);
-		void setResizable(const Napi::CallbackInfo&);
-		void setGrab(const Napi::CallbackInfo&);
-		
+		Napi::Value getFullscreen(const Napi::CallbackInfo&);
+		void setFullscreen(const Napi::CallbackInfo&, const Napi::Value&);
 
+		Napi::Value getGrab(const Napi::CallbackInfo&);
+		void setGrab(const Napi::CallbackInfo&, const Napi::Value&);
+
+		Napi::Value getOpacity(const Napi::CallbackInfo&);
+		void setOpacity(const Napi::CallbackInfo&, const Napi::Value&);
+		
+		Napi::Value getBrightness(const Napi::CallbackInfo&);
+		void setBrightness(const Napi::CallbackInfo&, const Napi::Value&);
+
+		Napi::Value getResizable(const Napi::CallbackInfo&);
+		void setResizable(const Napi::CallbackInfo&, const Napi::Value&);
+
+		Napi::Value getBordered(const Napi::CallbackInfo&);
+		void setBordered(const Napi::CallbackInfo&, const Napi::Value&);
+
+		Napi::Value minimized(const Napi::CallbackInfo&);
+		Napi::Value maximized(const Napi::CallbackInfo&);
+		Napi::Value shown(const Napi::CallbackInfo&);
+
+		Napi::Value getCursor(const Napi::CallbackInfo&);
+		void setCursor(const Napi::CallbackInfo&, const Napi::Value&);
+
+		void createGLContext(const Napi::CallbackInfo&);
+		void deleteGLContext(const Napi::CallbackInfo&);
+		void swap(const Napi::CallbackInfo&);
+		void raise(const Napi::CallbackInfo&);
+		void restore(const Napi::CallbackInfo&);
 		void show(const Napi::CallbackInfo&);
 		void hide(const Napi::CallbackInfo&);
 		void maximize(const Napi::CallbackInfo&);

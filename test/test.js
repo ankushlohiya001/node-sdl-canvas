@@ -1,71 +1,79 @@
-const sdl = require("./lib/binding");
+const engine = require("../");
 
-const canvas = require("canvas");
-
-const [wid, hei] = [1280, 720];
-
-const can = canvas.createCanvas(wid, hei);
+const w = 1280,
+  h = 720;
+const win = engine.createWindow("clock sample", w, h);
+const can = win.getCanvas();
 const ctx = can.getContext("2d");
 
-// console.log(sdl);
-// sdl.init(sdl.init_flags.INIT_EVERYTHING);
+let mouse = {
+  x: 0,
+  y: 0
+};
 
-const window = new sdl.Window("pacman");
+win.resizable = true;
+win.on("mousemove", eve => {
+  mouse.x = eve.clientX;
+  mouse.y = eve.clientY;
+});
 
-const renderer = new sdl.Renderer(window);
+const win2 = engine.createWindow("clock sample", w, h);
+const can2 = win2.getCanvas();
+const ctx2 = can2.getContext("2d");
 
-const texture = new sdl.Texture(renderer, wid, hei);
+let mouse2 = {
+  x: 0,
+  y: 0
+};
 
-const watcher = new sdl.EventWatcher();
+win2.resizable = true;
+win2.on("mousemove", eve => {
+  mouse2.x = eve.clientX;
+  mouse2.y = eve.clientY;
+});
 
-let will = true;
 
-let count = 0;
+function loop() {
+  let gs = 0;
+  if (!win.isDestroyed()) {
+    let {
+      w,
+      h
+    } = win.size;
+    ctx.fillStyle = `rgb(${gs}, ${gs}, ${gs})`;
+    ctx.fillRect(0, 0, w, h);
 
-(function loop() {
+    ctx.beginPath();
+    ctx.fillStyle = "blue";
+    ctx.strokeStyle = "#000";
+    ctx.arc(mouse.x, mouse.y, 100, 0, 44 / 7);
+    ctx.fill();
+    ctx.stroke();
+    ctx.beginPath();
 
-  watcher.pollEvent();
+    win.render();
+  }
 
-  const mouse = watcher.mouseEvent;
+  if (!win2.isDestroyed()) {
+    let {
+      w,
+      h
+    } = win2.size;
+    ctx2.fillStyle = `rgb(${gs}, ${gs}, ${gs})`;
+    ctx2.fillRect(0, 0, w, h);
 
-  // let arr = new Int8Array(2);
-  // arr[0] = mouse.x;
-  // arr[1] = mouse.y;
+    ctx2.beginPath();
+    ctx2.fillStyle = "blue";
+    ctx2.strokeStyle = "#000";
+    ctx2.arc(mouse2.x, mouse2.y, 100, 0, 44 / 7);
+    ctx2.fill();
+    ctx2.stroke();
+    ctx2.beginPath();
 
-  // window.position = [];
-  count++;
+    win2.render();
+  }
 
-  will = watcher.commonEvent.type != 0x100;
-
-  ctx.fillStyle = "#000";
-  ctx.fillRect(0, 0, wid, hei);
-  ctx.beginPath();
-  ctx.fillStyle = "red";
-  ctx.arc(mouse.x, mouse.y, count % 20 + 20, 0, 44 / 7);
-  ctx.fill();
-
-  texture.update(can.toBuffer("raw"));
-  renderer.render(texture);
-
-  if (will) setTimeout(loop, 17);
-  else destroy();
-})();
-
-// console.log(window.size);
-
-// let will = true;
-// let frames = 0;
-
-// (function loop() {
-//   const pos = window.position;
-//   window.title = `pos: ${pos[0]}, ${pos[1]}`;
-//   if (will) setTimeout(loop, 100);
-// })();
-// let renderer = window.createRenderer();
-
-function destroy() {
-  texture.destroy();
-  renderer.destroy();
-  window.destroy();
-  sdl.quit();
+  setTimeout(loop, 1000 / 60);
 }
+
+loop();

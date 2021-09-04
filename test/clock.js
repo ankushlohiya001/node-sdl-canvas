@@ -1,13 +1,8 @@
 const engine = require("../");
-
-engine.init();
-
-engine.mainLoop();
 const w = 1280,
   h = 720;
 const win = engine.createWindow("clock sample", w, h);
-const can = engine.createCanvas(1280, 720);
-win.canvas = can;
+const can = win.getCanvas();
 
 const mouse = {
   x: 0,
@@ -16,7 +11,8 @@ const mouse = {
 win.on("mousemove", eve => {
   mouse.x = eve.clientX;
   mouse.y = eve.clientY;
-})
+});
+
 
 const ctx = can.getContext("2d");
 
@@ -104,15 +100,27 @@ function hands(px, py, rad) {
   //   w / 2 - ctx.measureText(`${sep[0]} : ${sep[1]} : ${sep[2]}`).width / 2, h / 2 + 100);
   ctx.beginPath();
 }
+// win.minSize = {
+//   w: 640,
+//   h: 360
+// };
+// win.maxSize = {
+//   w: 1280,
+//   h: 720
+// };
+// win.brightness = 2;
 
-function loop() {
-  // const [w, h] = win.size;
+async function loop() {
+  const {
+    w,
+    h
+  } = win.size;
   ctx.fillStyle = "#222";
   ctx.fillRect(0, 0, w, h);
   const rad = dial(mouse.x, mouse.y);
   indic(mouse.x, mouse.y, rad);
   hands(mouse.x, mouse.y, rad);
-  win.render();
+  await win.render();
   setTimeout(loop, 17);
 }
 

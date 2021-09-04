@@ -1,5 +1,4 @@
 #include "events.h"
-
 Events::EventWatcher::EventWatcher(const Napi::CallbackInfo& info) : ObjectWrap(info){}
 
 void Events::EventWatcher::setCallback(const Napi::CallbackInfo& info){
@@ -32,12 +31,12 @@ Napi::Value Events::EventWatcher::getWindowEvent(const Napi::CallbackInfo& info)
 	SDL_GetWindowPosition(win, &x, &y);
 	SDL_GetWindowSize(win, &w, &h);
 
+
 	currentEvent.Set("event", Napi::Number::New(env, this->eve.window.event));
 	currentEvent.Set("x", Napi::Number::New(env, x));
 	currentEvent.Set("y", Napi::Number::New(env, y));
 	currentEvent.Set("w", Napi::Number::New(env, w));
 	currentEvent.Set("h", Napi::Number::New(env, h));
-
 
 	return currentEvent;
 }

@@ -12,17 +12,11 @@ const {
 } = require("canvas");
 
 const globalMethods = {
-  init() {
-    if (!appContext) appContext = new ApplicationContext();
-  },
-
-  mainLoop(delayMs) {
-    if (!appContext) throw "call init() to initialise SDL";
-    ApplicationContext.mainLoop(delayMs);
-  },
-
   createWindow(...params) {
-    if (!appContext) throw "call init() to initialise SDL, which is required for window.";
+    if (!appContext) {
+      appContext = new ApplicationContext();
+      ApplicationContext.mainLoop();
+    }
     const window = new Window(...params);
     window.on("close", () => {
       appContext.exit();

@@ -1,7 +1,7 @@
 {
-  "name": "sdl-dev",
+  "name": "node-sdl-canvas",
   "version": "1.0.0",
-  "description": "",
+  "description": "node-sdl-canvas is there!!",
   "main": "index.js",
   "scripts": {
     "configure": "node-gyp configure",
@@ -9,11 +9,14 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "install": "node-gyp rebuild"
   },
+  "": "",
   "author": "",
   "license": "ISC",
   "gypfile": true,
   "dependencies": {
     "nan": "^2.14.2",
-    "node-addon-api": "*"
+    "node-addon-api": "",
+    "keycode": "",
+    "canvas": ""
   }
 }

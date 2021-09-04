@@ -2,6 +2,7 @@
 #include "video.h"
 #include "render.h"
 #include "events.h"
+#include "opengl.h"
 
 Napi::Value SdlMain::initSome(const Napi::CallbackInfo& info){
 	Napi::Env env = info.Env();
@@ -81,6 +82,7 @@ Napi::Object Init(Napi::Env env, Napi::Object exports){
 	Video::Init(env, exports);
 	Render::Init(env, exports);
 	Events::Init(env, exports);
+	Opengl::Init(env, exports);
 	
   return exports;
 }

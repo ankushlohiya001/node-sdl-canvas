@@ -21,6 +21,17 @@ class ApplicationContext extends EventEmitter {
       this.exit();
       return;
     }
+
+    // handle interrupt signal ( Ctrl + C )
+    // destroy all window, then exits
+
+    process.on("SIGINT", () => {
+      for (let winId in windowList) {
+        let win = windowList[winId];
+        win.exit();
+      }
+    });
+
     console.log("->Success of initalised SDL");
   }
 
