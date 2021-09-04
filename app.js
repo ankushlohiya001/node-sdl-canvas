@@ -1,14 +1,14 @@
 const EventEmitter = require("events");
 const sdl = require("./sdl");
-const eventWatcher= require("./events");
+const eventWatcher = require("./events");
 
 class ApplicationContext extends EventEmitter {
   static loopId = null;
-  static mainLoop() {
+  static mainLoop(delayMs = 17) {
     if (ApplicationContext.loopId) return;
     (function loop() {
       eventWatcher.eventPolling();
-      ApplicationContext.loopId = setTimeout(loop, 17);
+      ApplicationContext.loopId = setTimeout(loop, delayMs);
     })();
   }
 

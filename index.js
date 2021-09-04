@@ -2,7 +2,7 @@ const path = require("path");
 const fs = require("fs");
 const Window = require("./window/window");
 const ApplicationContext = require("./app");
-const appContext = new ApplicationContext();
+let appContext;
 
 const {
   createCanvas,
@@ -12,9 +12,17 @@ const {
 } = require("canvas");
 
 const globalMethods = {
-  mainLoop: ApplicationContext.mainLoop,
+  init() {
+    if (!appContext) appContext = new ApplicationContext();
+  },
+
+  mainLoop(delayMs) {
+    if (!appContext) throw "call init() to initialise SDL";
+    ApplicationContext.mainLoop(delayMs);
+  },
 
   createWindow(...params) {
+    if (!appContext) throw "call init() to initialise SDL, which is required for window.";
     const window = new Window(...params);
     appContext.addWindow(window);
     return window;

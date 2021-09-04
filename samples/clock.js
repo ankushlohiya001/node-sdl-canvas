@@ -1,16 +1,22 @@
-const engine = require("./../");
+const engine = require("../");
+
+engine.init();
+
 engine.mainLoop();
-const win = engine.createWindow(
-  "clock sample",
-  1280,
-  720
-);
-let {
-  w,
-  h
-} = win.size;
-const can = engine.createCanvas();
+const w = 1280,
+  h = 720;
+const win = engine.createWindow("clock sample", w, h);
+const can = engine.createCanvas(1280, 720);
 win.canvas = can;
+
+const mouse = {
+  x: 0,
+  y: 0
+};
+win.on("mousemove", eve => {
+  mouse.x = eve.clientX;
+  mouse.y = eve.clientY;
+})
 
 const ctx = can.getContext("2d");
 
@@ -33,7 +39,7 @@ function dial(w, h) {
   return rad;
 }
 
-function indic(w, h, rad) {
+function indic(px, py, rad) {
   ctx.beginPath();
   let inc = 0;
   for (let i = 0; i < 360; i += 6) {
@@ -43,14 +49,14 @@ function indic(w, h, rad) {
     } else {
       inc = 0;
     }
-    ctx.moveTo(w / 2 + loc[0] * rad * (0.85 - inc), h / 2 + loc[1] * rad * (0.85 - inc));
-    ctx.lineTo(w / 2 + loc[0] * rad * 0.9, h / 2 + loc[1] * rad * 0.9);
+    ctx.moveTo(px + loc[0] * rad * (0.85 - inc), py + loc[1] * rad * (0.85 - inc));
+    ctx.lineTo(px + loc[0] * rad * 0.9, py + loc[1] * rad * 0.9);
   }
   ctx.stroke();
   ctx.beginPath();
 }
 
-function hands(w, h, rad) {
+function hands(px, py, rad) {
   const time = new Date();
   const sep = [];
   let loc = [0, 0];
@@ -63,29 +69,29 @@ function hands(w, h, rad) {
   ctx.beginPath();
   loc = getLoc((sep[0] / 12) * 360 + (sep[1] / 2));
   ctx.lineWidth = 10;
-  ctx.moveTo(w / 2, h / 2);
-  ctx.lineTo(w / 2 + loc[0] * rad * 0.4, h / 2 + loc[1] * rad * 0.4);
+  ctx.moveTo(px, py);
+  ctx.lineTo(px + loc[0] * rad * 0.4, py + loc[1] * rad * 0.4);
   ctx.stroke();
   //minute
   ctx.beginPath();
   ctx.lineWidth = 6;
   loc = getLoc((sep[1] / 60) * 360 + (sep[2] / 10));
-  ctx.moveTo(w / 2, h / 2);
-  ctx.lineTo(w / 2 + loc[0] * rad * 0.5, h / 2 + loc[1] * rad * 0.5);
+  ctx.moveTo(px, py);
+  ctx.lineTo(px + loc[0] * rad * 0.5, py + loc[1] * rad * 0.5);
   ctx.stroke();
   //second
   ctx.beginPath();
   ctx.lineWidth = 4;
   ctx.strokeStyle = "#f42";
   loc = getLoc((sep[2] / 60) * 360);
-  ctx.moveTo(w / 2 - loc[0] * rad * 0.1, h / 2 - loc[1] * rad * 0.1);
-  ctx.lineTo(w / 2 + loc[0] * rad * 0.7, h / 2 + loc[1] * rad * 0.7);
+  ctx.moveTo(px - loc[0] * rad * 0.1, py - loc[1] * rad * 0.1);
+  ctx.lineTo(px + loc[0] * rad * 0.7, py + loc[1] * rad * 0.7);
   ctx.stroke();
 
   // ctx.stroke();
   ctx.beginPath();
   ctx.fillStyle = "#f42b";
-  ctx.arc(w / 2, h / 2, 15, 0, 44 / 7);
+  ctx.arc(px, py, 15, 0, 44 / 7);
   ctx.fill();
   // ctx.beginPath();
   // let pos = ctx.measureText(`${sep[0]} : ${sep[1]} : ${sep[2]}`).width;
@@ -100,15 +106,15 @@ function hands(w, h, rad) {
 }
 
 function loop() {
-  const [w, h] = win.size;
-
+  // const [w, h] = win.size;
   ctx.fillStyle = "#222";
   ctx.fillRect(0, 0, w, h);
-  const rad = dial(w, h);
-  indic(w, h, rad);
-  hands(w, h, rad);
+  const rad = dial(mouse.x, mouse.y);
+  indic(mouse.x, mouse.y, rad);
+  hands(mouse.x, mouse.y, rad);
   win.render();
-  setTimeout(loop, 1000);
+  setTimeout(loop, 17);
 }
+
 
 loop();

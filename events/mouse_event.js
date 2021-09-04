@@ -8,8 +8,8 @@ class MouseEvent extends CommonEvent {
     this.ctrlKey = false;
     this.metaKey = false;
     this.shiftKey = false;
-    this.offsetX = 0;
-    this.offsetY = 0;
+    this.clientX = 0;
+    this.clientY = 0;
     this.deltaX = 0;
     this.deltaY = 0;
     this.dblclick = false;

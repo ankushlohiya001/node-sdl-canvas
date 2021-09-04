@@ -12,8 +12,11 @@ let angle = 0;
 let length = 0;
 const max = 320;
 
-function loop(ang = 0, len = 0) {
+let done = false;
+
+async function loop(ang = 0, len = 0) {
   // ang%=30;
+  done = false;
   if (len > max) len = max;
   if (len < 0) len = 0;
   const rh = 125 + len;
@@ -161,16 +164,16 @@ function loop(ang = 0, len = 0) {
   ctx.restore();
   ctx.beginPath();
 
-  win.render();
+  await win.render();
+  done = true;
   // setTimeout(()=>{
   // loop(angle, length);
   // },1000/30);
 }
 loop();
 
-
 win.on("resize", () => {
-  loop();
+  if(done) loop();
 });
 
 function changeEve(delta) {

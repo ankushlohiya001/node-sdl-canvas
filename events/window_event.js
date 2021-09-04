@@ -5,12 +5,21 @@ const sdl = require("../sdl");
 class WindowEvent extends CommonEvent {
   constructor(type) {
     super(type);
+    this.clientX = 0;
+    this.clientY = 0;
+    this.deltaX = 0;
+    this.deltaY = 0;
     this.data = null;
   }
   static getCurrentWindowEvent(sdlEvent, window) {
     const currentWindowEvent = new WindowEvent();
     currentWindowEvent.setCommonData(sdlEvent, window);
-    currentWindowEvent.data = [sdlEvent.window.data1, sdlEvent.window.data2];
+    const data = [sdlEvent.window.data1, sdlEvent.window.data2];
+    currentWindowEvent.clientX = data[0];
+    currentWindowEvent.clientY = data[1];
+    currentWindowEvent.deltaX = data[0] - window._position[0];
+    currentWindowEvent.deltaY = data[1] - window._position[1];
+    currentWindowEvent.data = data;
     return currentWindowEvent;
   }
 
