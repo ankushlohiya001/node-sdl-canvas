@@ -1,71 +1,71 @@
-const sdl = require("./lib/binding");
+const document = require("../");
+const {Shape, Material, Texture, initAll} = require("./gl");
+const window = document.window = document.createElement("window", {
+  fps: 60,
+  resizable: true
+});
+let size = window.size;
+const mouse = {x:0, y:0};
 
-const canvas = require("canvas");
+const can2 = document.createElement("canvas", {width: size.w, height: size.h});
+document.appendChild(can2);
+const gl = can2.getContext("3d");
 
-const [wid, hei] = [1280, 720];
+initAll(gl);
 
-const can = canvas.createCanvas(wid, hei);
-const ctx = can.getContext("2d");
+window.on("mousemove", (eve)=>{
+  mouse.x = eve.clientX;
+  mouse.y = eve.clientY;
+});
 
-// console.log(sdl);
-// sdl.init(sdl.init_flags.INIT_EVERYTHING);
+window.on("resize", eve=>{
+  const size = window.size;
+  can2.width = size.w;
+  can2.height = size.h;
+  gl.viewport(0, 0, size.w, size.h);
+});
 
-const window = new sdl.Window("pacman");
+window.on("click", ()=>{
+  const dat = Shape.Plane(50, 100, mouse.x, mouse.y);
+  shps.updateData([...shps.geo, ...dat]);
+});
 
-const renderer = new sdl.Renderer(window);
+const shape = new Shape(Shape.Plane(50, 100));
+const shps = new Shape([]);
+const tex = new Texture();
+const buf = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+  0, 0, 0, 1, 1, 0,
+]), gl.STATIC_DRAW);
+gl.bindBuffer(gl.ARRAY_BUFFER, null);
 
-const texture = new sdl.Texture(renderer, wid, hei);
+function setup(){
+  gl.useProgram(Shape.commonShader);
+}
 
-const watcher = new sdl.EventWatcher();
+function draw(){
+  const size = window.size;
+  gl.bindTexture(gl.TEXTURE_2D, tex.texture);
+  const loc = gl.getAttribLocation(Shape.commonShader, "a_texC");
+  gl.enableVertexAttribArray(loc);
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+  gl.bindBuffer(gl.ARRAY_BUFFER, null);
 
-let will = true;
+  shps.draw();
+  shape.translate(mouse.x, mouse.y);
+  shape.draw();
+}
 
-let count = 0;
+setup();
+(function loop(){
+  window.requestAnimationFrame(loop);
+  gl.clearColor(1, 1, 1);
+  gl.clear(gl.COLOR_BUFFER_BIT);
 
-(function loop() {
+  draw();
 
-  watcher.pollEvent();
-
-  const mouse = watcher.mouseEvent;
-
-  // let arr = new Int8Array(2);
-  // arr[0] = mouse.x;
-  // arr[1] = mouse.y;
-
-  // window.position = [];
-  count++;
-
-  will = watcher.commonEvent.type != 0x100;
-
-  ctx.fillStyle = "#000";
-  ctx.fillRect(0, 0, wid, hei);
-  ctx.beginPath();
-  ctx.fillStyle = "red";
-  ctx.arc(mouse.x, mouse.y, count % 20 + 20, 0, 44 / 7);
-  ctx.fill();
-
-  texture.update(can.toBuffer("raw"));
-  renderer.render(texture);
-
-  if (will) setTimeout(loop, 17);
-  else destroy();
+  window.render();
 })();
 
-// console.log(window.size);
-
-// let will = true;
-// let frames = 0;
-
-// (function loop() {
-//   const pos = window.position;
-//   window.title = `pos: ${pos[0]}, ${pos[1]}`;
-//   if (will) setTimeout(loop, 100);
-// })();
-// let renderer = window.createRenderer();
-
-function destroy() {
-  texture.destroy();
-  renderer.destroy();
-  window.destroy();
-  sdl.quit();
-}

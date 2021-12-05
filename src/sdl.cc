@@ -1,6 +1,5 @@
 #include "sdl.h"
 #include "video.h"
-#include "render.h"
 #include "events.h"
 
 Napi::Value SdlMain::initSome(const Napi::CallbackInfo& info){
@@ -79,7 +78,6 @@ Napi::Object Init(Napi::Env env, Napi::Object exports){
 	exports.Set(Napi::String::New(env, "quit"), Napi::Function::New(env, SdlMain::quit));
 
 	Video::Init(env, exports);
-	Render::Init(env, exports);
 	Events::Init(env, exports);
 	
   return exports;

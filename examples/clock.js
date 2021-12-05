@@ -1,14 +1,14 @@
-const document = require("../");
+const createWindow = require("../");
 const w = 1280,
   h = 720;
-const win = document.window = document.createElement("window", {
+const win = createWindow({
   title: "clock sample",
   width: w,
   height: h,
   fps: 60
 });
-const can = document.createElement("canvas", {width: w, height: h});
-document.appendChild(can);
+const can = win.document.createElement("canvas");
+win.document.appendChild(can);
 const mouse = {
   x: 0,
   y: 0

@@ -1,7 +1,7 @@
 {
-  "name": "sdl-dev",
-  "version": "1.0.0",
-  "description": "",
+  "name": "node-sdl-canvas",
+  "version": "3.1.0",
+  "description": "node-sdl-canvas is there!!",
   "main": "index.js",
   "scripts": {
     "configure": "node-gyp configure",
@@ -9,11 +9,18 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "install": "node-gyp rebuild"
   },
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ankushlohiya001/node-sdl-canvas.git"
+  },
+  "hompage": "https://github.com/ankushlohiya001/node-sdl-canvas.git",
+  "author": "kushlohiya",
   "license": "ISC",
   "gypfile": true,
   "dependencies": {
-    "nan": "^2.14.2",
-    "node-addon-api": "*"
+    "canvas": "",
+    "keycode": "",
+    "node-addon-api": "^4.1.0",
+    "bindings": ""
   }
 }
