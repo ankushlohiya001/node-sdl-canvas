@@ -104,12 +104,23 @@ class Shape{
     this.trMatrix = mat;
   }
 
+  rotateZ(ang){
+    let cs = Math.cos(ang);
+    let sn = Math.sin(ang);
+    const mat = Matrix.newIdentity(4);
+    mat.set(0, 0, cs);
+    mat.set(0, 1, sn);
+    mat.set(1, 0, -cs);
+    mat.set(1, 1, sn);
+    this.transform(mat);
+  }
+
   translate(px, py, pz = 0){
     const mat = Matrix.newIdentity(4);
     mat.set(3, 0, px);
     mat.set(3, 1, py);
     mat.set(3, 2, pz);
-    this.setTransform(mat);
+    this.transform(mat);
   }
 
   updateUniforms(gl){
@@ -121,8 +132,9 @@ class Shape{
     gl.uniformMatrix4fv(Shape.trMatUniform, false, this.trMatrix.array);
   }
 
-  draw(){
+  draw(drawType){
     const gl = Shape.gl;
+    drawType = drawType || gl.TRIANGLES;
 
     gl.useProgram(Shape.commonShader);
 
@@ -132,7 +144,7 @@ class Shape{
     gl.enableVertexAttribArray(Shape.posAttribute);
     Shape.usingBuffer(this.buffer, ()=>{
       gl.vertexAttribPointer(Shape.posAttribute, this.dim, gl.FLOAT, false, 0, 0);
-      gl.drawArrays(gl.TRIANGLES, 0, this.geo.length / this.dim);
+      gl.drawArrays(drawType, 0, this.geo.length / this.dim);
     });
 
     gl.useProgram(null);

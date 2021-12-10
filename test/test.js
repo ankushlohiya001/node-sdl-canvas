@@ -9,7 +9,7 @@ const mouse = {x:0, y:0};
 
 const can2 = document.createElement("canvas", {width: size.w, height: size.h});
 document.appendChild(can2);
-const gl = can2.getContext("3d");
+const gl = can2.getContext("webgl");
 
 initAll(gl);
 
@@ -25,43 +25,29 @@ window.on("resize", eve=>{
   gl.viewport(0, 0, size.w, size.h);
 });
 
-window.on("click", ()=>{
-  const dat = Shape.Plane(50, 100, mouse.x, mouse.y);
-  shps.updateData([...shps.geo, ...dat]);
-});
-
-const shape = new Shape(Shape.Plane(50, 100));
-const shps = new Shape([]);
-const tex = new Texture();
-const buf = gl.createBuffer();
-gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-  0, 0, 0, 1, 1, 0,
-]), gl.STATIC_DRAW);
-gl.bindBuffer(gl.ARRAY_BUFFER, null);
+const shape = new Shape(Shape.Plane(50, 80));
 
 function setup(){
   gl.useProgram(Shape.commonShader);
+
 }
 
 function draw(){
   const size = window.size;
-  gl.bindTexture(gl.TEXTURE_2D, tex.texture);
-  const loc = gl.getAttribLocation(Shape.commonShader, "a_texC");
-  gl.enableVertexAttribArray(loc);
-  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-  gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-  gl.bindBuffer(gl.ARRAY_BUFFER, null);
-
-  shps.draw();
+  const u_col = gl.getUniformLocation(Shape.commonShader, "u_color");
+  gl.uniform4f(u_col, 0.5, 1.0, 0.0, 1.0);
   shape.translate(mouse.x, mouse.y);
   shape.draw();
+
+  gl.uniform4f(u_col, 1.0, 1.0, 1.0, 1.0);
+  shape.translate(mouse.x+10, mouse.y-10);
+  shape.draw(gl.LINES);
 }
 
 setup();
 (function loop(){
   window.requestAnimationFrame(loop);
-  gl.clearColor(1, 1, 1);
+  gl.clearColor(0, 0, 0);
   gl.clear(gl.COLOR_BUFFER_BIT);
 
   draw();
