@@ -1,6 +1,6 @@
 {
   "name": "node-sdl-canvas",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "node-sdl-canvas is there!!",
   "main": "index.js",
   "scripts": {},
@@ -8,12 +8,11 @@
     "type": "git",
     "url": "https://github.com/ankushlohiya001/node-sdl-canvas.git"
   },
-  "hompage": "https://github.com/ankushlohiya001/node-sdl-canvas.git",
+  "homepage": "https://github.com/ankushlohiya001/node-sdl-canvas.git",
   "author": "kushlohiya",
   "license": "ISC",
-  "gypfile": true,
   "dependencies": {
     "canvas": "^2.11.2",
-    "node-sdl": "../node-sdl"
+    "node-sdl": "^2.0.0"
   }
 }
