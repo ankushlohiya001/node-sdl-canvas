@@ -2,8 +2,10 @@
   "name": "node-sdl-canvas",
   "version": "4.0.1",
   "description": "node-sdl-canvas is there!!",
-  "main": "index.js",
-  "scripts": {},
+  "main": "./dist/mod.js",
+  "scripts": {
+    "install": "tsc"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ankushlohiya001/node-sdl-canvas.git"
@@ -13,6 +15,11 @@
   "license": "ISC",
   "dependencies": {
     "canvas": "^2.11.2",
-    "node-sdl": "^2.0.0"
+    "keycode": "^2.2.1",
+    "node-sdl": "file:../node-sdl"
+  },
+  "devDependencies": {
+    "@types/node": "^22.1.0",
+    "typescript": "^5.5.4"
   }
 }

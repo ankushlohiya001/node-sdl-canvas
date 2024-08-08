@@ -26,10 +26,8 @@ const eves = [
 ];
 
 
-function implement(target) {
+export function implement(target: any) {
   for (let eve of eves) {
     target[eve] = null;
   }
 }
-
-module.exports = implement;
