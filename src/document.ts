@@ -35,7 +35,7 @@ export class Document {
     implement(this);
   }
 
-  createElement(elem: string, opt?: Opts) {
+  createElement(elem: string, opt: Opts) {
     const create = Document.createMap[elem];
     if (!create) throw `element type "${elem}" not available..`;
     // opt.width = opt?.width || 640;

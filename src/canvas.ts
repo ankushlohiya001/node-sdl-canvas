@@ -9,7 +9,6 @@ export class GCanvas {
   window: any;
   canvas: Canvas;
   context3d: any;
-  context2d: CanvasRenderingContext2D | null;
   style: any;
 
   constructor(wid: number, hei: number, opt: Record<string, any>) {
@@ -18,7 +17,6 @@ export class GCanvas {
     this.posY = opt.y || 0;
     this.window = opt.window;
     this.context3d = null;
-    this.context2d = null;
 
     const canvas = this;
     this.style = {
@@ -73,7 +71,7 @@ export class GCanvas {
     this.canvas.height = hei;
   }
 
-  getContext(type: string) {
+  getContext(type: string): CanvasRenderingContext2D | null {
     switch (type.toLowerCase()) {
       case "3d":
       case "webgl":
