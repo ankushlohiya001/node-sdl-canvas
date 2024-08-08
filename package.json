@@ -1,6 +1,6 @@
 {
   "name": "node-sdl-canvas",
-  "version": "4.0.1",
+  "version": "5.0.1",
   "description": "node-sdl-canvas is there!!",
   "main": "./dist/mod.js",
   "scripts": {
@@ -16,7 +16,7 @@
   "dependencies": {
     "canvas": "^2.11.2",
     "keycode": "^2.2.1",
-    "node-sdl": "file:../node-sdl"
+    "node-sdl": "^3.0.0"
   },
   "devDependencies": {
     "@types/node": "^22.1.0",
