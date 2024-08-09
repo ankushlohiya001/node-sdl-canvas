@@ -1,10 +1,10 @@
 import { Audio as AudioCore } from "node-sdl";
 
 enum AudioStatus {
+  STOPPED = 0,
   LOADED,
   PLAYING,
   PAUSED,
-  STOPPED,
   ENDED,
 }
 
@@ -26,7 +26,7 @@ export class Audio {
   }
 
   play(loopCount: number) {
-    if (this.status == AudioStatus.LOADED) {
+    if (this.status >= AudioStatus.LOADED) {
       this.audioCore.play(loopCount);
       this.status = AudioStatus.PLAYING;
     } else {
