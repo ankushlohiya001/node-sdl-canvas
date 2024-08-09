@@ -3,6 +3,7 @@ import { GCanvas } from "./canvas";
 import { Image } from "canvas";
 import { Window } from "./window";
 import { App } from "./app";
+import { Audio, AudioOptions } from "./audio";
 
 interface Opts {
   width: number
@@ -27,6 +28,10 @@ export class Document {
     window(opt: Opts): Window {
       return App.createWindow(opt)
     },
+
+    audio(opt: AudioOptions): Audio {
+      return Audio.create(opt)
+    }
   };
   window: Window | null;
 
@@ -37,7 +42,9 @@ export class Document {
 
   createElement(elem: "window", opt: Opts): Window
   createElement(elem: "canvas", opt: Opts): GCanvas
-  createElement(elem: string, opt: Opts) {
+  createElement(elem: "image", opt: Opts): Image
+  createElement(elem: "audio", opt: AudioOptions): Audio
+  createElement(elem: string, opt: any) {
     const create = Document.createMap[elem];
     if (!create) throw `element type "${elem}" not available..`;
     // opt.width = opt?.width || 640;
