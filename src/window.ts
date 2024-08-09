@@ -31,7 +31,7 @@ type Position = { x: number, y: number } | [number, number]
 type Size = { w: number, h: number }
 
 export class Window {
-  static list = new Map<number, Window>(); // stroing all window by their IDs
+  static list: Map<number, Window> = new Map(); // stroing all window by their IDs
   id: number;
   private _closable: boolean;
   private _opengl: boolean;
@@ -311,7 +311,8 @@ export class Window {
     clearTimeout(ref);
   }
 
-  requestAnimationFrame(cb: (performance: number) => Promise<any>) {
+  requestAnimationFrame(cb: (performance: number) => Promise<any>): number
+  requestAnimationFrame(cb: (performance: number) => Promise<any>): any {
     if (this._closed) return;
     const crnt = performance.now();
     this._deltaTime = crnt - this._lastPerformance;

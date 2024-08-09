@@ -1,3 +1,3 @@
 import { Document } from "./src/document";
 
-export const document = new Document()
+export const document: Document = new Document()
