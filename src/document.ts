@@ -16,7 +16,7 @@ export class Document {
       return new GCanvas(opt.width, opt.height, opt);
     },
 
-    image(opt: Opts) {
+    image(opt: Opts): Image {
       const img = new Image()
       img.src = opt.src || ""
       img.width = opt.width
@@ -24,7 +24,7 @@ export class Document {
       return img;
     },
 
-    window(opt: Opts) {
+    window(opt: Opts): Window {
       return App.createWindow(opt)
     },
   };
@@ -35,6 +35,8 @@ export class Document {
     implement(this);
   }
 
+  createElement(elem: "window", opt: Opts): Window
+  createElement(elem: "canvas", opt: Opts): GCanvas
   createElement(elem: string, opt: Opts) {
     const create = Document.createMap[elem];
     if (!create) throw `element type "${elem}" not available..`;
@@ -61,19 +63,19 @@ export class Document {
     }
   }
 
-  appendChild(can: GCanvas, win: Window) {
+  appendChild(can: GCanvas, win: Window | null = null) {
     win = win || this.window;
     if (can) {
       switch (can.constructor) {
         case GCanvas:
-          win.canvasList.add(can);
-          can.window = win.id;
+          win?.canvasList.add(can);
+          can.window = win?.id;
       }
     }
   }
 
-  removeChild(can: GCanvas, win: Window) {
+  removeChild(can: GCanvas, win: Window | null = null) {
     win = win || this.window;
-    win.canvasList.delete(can);
+    win?.canvasList.delete(can);
   }
 }

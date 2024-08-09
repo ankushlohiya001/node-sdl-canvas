@@ -4,7 +4,7 @@ export class CommonEvent {
   nativeEvent: any;
   type: number | string | null;
   target: any;
-  timestamp: any;
+  timestamp: number | null;
 
   constructor(type = null) {
     this.nativeEvent = null;

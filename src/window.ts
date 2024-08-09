@@ -9,7 +9,12 @@ import { setupEventWatcher } from "./events/mod";
 
 import { performance } from "perf_hooks";
 
-interface WindowOptions {
+export interface WindowOptions {
+  x?: number,
+  y?: number,
+  width?: number,
+  height?: number,
+  title?: string,
   type?: any;
   fullscreen?: boolean;
   hidden?: boolean;
@@ -21,6 +26,9 @@ interface WindowOptions {
   resizable?: boolean;
   opengl?: boolean;
 }
+
+type Position = { x: number, y: number } | [number, number]
+type Size = { w: number, h: number }
 
 export class Window {
   static list = new Map<number, Window>(); // stroing all window by their IDs
@@ -35,7 +43,7 @@ export class Window {
   eventEmitter: EventEmitter<[never]>;
   sdlWindow: SdlWindow;
 
-  static create(app: any, opts: WindowOptions) {
+  static create(app: any, opts: WindowOptions): Window {
     const window = new Window(opts);
     const winId = window.id; // required storing as destroying window cause id loss
     Window.list.set(winId, window);
@@ -52,7 +60,7 @@ export class Window {
     return window;
   }
 
-  static getFlags(options: WindowOptions) {
+  static getFlags(options: WindowOptions): number {
     // get sdl flags from options
 
     let flags = 0;
@@ -152,23 +160,23 @@ export class Window {
     if (cleared) this.sdlWindow.render();
   }
 
-  on(eve: string, cb: any) {
+  on(eve: string, cb: any): EventEmitter {
     return this.eventEmitter.on(eve, cb);
   }
 
-  off(eve: string, cb: any) {
+  off(eve: string, cb: any): EventEmitter {
     return this.eventEmitter.off(eve, cb);
   }
 
-  emit(eve: string, cb?: any) {
+  emit(eve: string, cb?: any): boolean {
     return this.eventEmitter.emit(eve, cb);
   }
 
-  addEventListener(eve: string, cb: any) {
+  addEventListener(eve: string, cb: any): EventEmitter {
     return this.eventEmitter.on(eve, cb);
   }
 
-  removeEventListener(eve: string, cb: any) {
+  removeEventListener(eve: string, cb: any): EventEmitter {
     return this.eventEmitter.off(eve, cb);
   }
 
@@ -182,11 +190,11 @@ export class Window {
     }
   }
 
-  get position() {
+  get position(): Position {
     return this.sdlWindow.position;
   }
 
-  set position(pos) {
+  set position(pos: Position) {
     this.sdlWindow.position = pos;
   }
 
@@ -209,11 +217,11 @@ export class Window {
     };
   }
 
-  get size() {
+  get size(): Size {
     return this.sdlWindow.size;
   }
 
-  set size(size) {
+  set size(size: Size) {
     const lsize = this.size;
     if (lsize.w === size.w && lsize.h === size.h) return;
     this.sdlWindow.size = size;
@@ -286,7 +294,7 @@ export class Window {
     this.sdlWindow.cursor = CursorType[cur.toUpperCase()];
   }
 
-  get cursor() {
+  get cursor(): string {
     return this.sdlWindow.cursor;
   }
 
@@ -303,7 +311,7 @@ export class Window {
     clearTimeout(ref);
   }
 
-  requestAnimationFrame(cb: any) {
+  requestAnimationFrame(cb: (performance: number) => Promise<any>) {
     if (this._closed) return;
     const crnt = performance.now();
     this._deltaTime = crnt - this._lastPerformance;
@@ -318,7 +326,7 @@ export class Window {
     }, Math.ceil(delayForNext));
   }
 
-  close() {
+  close(): boolean {
     if (!this.closable) {
       return false;
     }

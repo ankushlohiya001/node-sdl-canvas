@@ -1,8 +1,8 @@
 import * as sdl from "node-sdl";
 import { InitFlag } from "./types";
 
-import { Window } from "./window";
-import { Audio } from "./audio";
+import { Window, WindowOptions } from "./window";
+import { Audio, AudioOptions } from "./audio";
 
 const Status = {
   Loaded: 0x10,
@@ -58,11 +58,11 @@ export class App {
     }
   }
 
-  static createWindow(opts: any) {
+  static createWindow(opts: WindowOptions): Window {
     return Window.create(App, opts);
   }
 
-  static createAudio(opts: any) {
+  static createAudio(opts: AudioOptions): Audio {
     return Audio.create(opts);
   }
 }

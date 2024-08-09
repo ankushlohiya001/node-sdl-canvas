@@ -8,7 +8,7 @@ enum AudioStatus {
   ENDED,
 }
 
-interface AudioOptions {
+export interface AudioOptions {
   src: string;
   channel: number;
 }

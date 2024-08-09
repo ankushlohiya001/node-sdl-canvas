@@ -4,11 +4,12 @@ import { MouseEvent } from "./mouse_event";
 import { KeyboardEvent } from "./keyboard_event";
 // const DropEvent = require("./drop_event");
 import { EventWatcher } from "node-sdl";
+import { Window } from "../window";
 
 function eventHandler(
   eventWatcher: EventWatcher,
-  eventType: any,
-  window: any,
+  eventType: number,
+  window: Window,
 ) {
   switch (eventType) {
     case EventType.WINDOWEVENT:
@@ -36,10 +37,10 @@ function eventHandler(
   }
 }
 
-export function setupEventWatcher(windowList: Map<number, any>) {
+export function setupEventWatcher(windowList: Map<number, Window>): EventWatcher {
   const eventWatcher = new EventWatcher();
 
-  eventWatcher.setCallback((eventType: any, winId: number) => {
+  eventWatcher.setCallback((eventType: number, winId: number) => {
     let window = windowList.get(winId);
 
     if (!window) return;

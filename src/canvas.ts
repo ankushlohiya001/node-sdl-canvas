@@ -9,7 +9,7 @@ export class GCanvas {
   window: any;
   canvas: Canvas;
   context3d: any;
-  style: any;
+  style: Record<string, any>;
 
   constructor(wid: number, hei: number, opt: Record<string, any>) {
     this.canvas = new Canvas(wid, hei);
@@ -47,7 +47,7 @@ export class GCanvas {
     return this.canvas.width;
   }
 
-  set width(wid) {
+  set width(wid: number) {
     const gl = this.context3d;
     if (gl) {
       gl.resize(wid, gl.drawingBufferHeight);
@@ -56,13 +56,13 @@ export class GCanvas {
     this.canvas.width = wid;
   }
 
-  get height() {
+  get height(): number {
     const gl = this.context3d;
     if (gl) return gl.drawingBufferHeight;
     return this.canvas.height;
   }
 
-  set height(hei) {
+  set height(hei: number) {
     const gl = this.context3d;
     if (gl) {
       gl.resize(gl.drawingBufferWidth, hei);
@@ -71,12 +71,14 @@ export class GCanvas {
     this.canvas.height = hei;
   }
 
-  getContext(type: string): CanvasRenderingContext2D | null {
+  getContext(type: "2d"): CanvasRenderingContext2D;
+  getContext(type: string) {
     switch (type.toLowerCase()) {
       case "3d":
       case "webgl":
       case "gl":
       case "experimental-webgl":
+        return null
       // case "opengl":
       //   if (this.context2d) return null;
       //   if (!createGL) createGL = require("gl");
@@ -94,12 +96,11 @@ export class GCanvas {
       //   return this.context3d;
       //   break;
       default:
-        if (this.context3d) return null;
         return this.canvas.getContext("2d");
     }
   }
 
-  getPixelData() {
+  getPixelData(): Buffer {
     return this.canvas.toBuffer("raw");
   }
 
