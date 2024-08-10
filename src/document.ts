@@ -1,14 +1,17 @@
 import { implement } from "./eventer";
 import { GCanvas } from "./canvas";
 import { Image } from "canvas";
-import { Window } from "./window";
+import { Window, WindowOptions } from "./window";
 import { App } from "./app";
 import { Audio, AudioOptions } from "./audio";
 
 interface Opts {
   width: number
   height: number
-  src?: string
+}
+
+interface ImageOpts extends Opts {
+  src: string
 }
 
 export class Document {
@@ -17,15 +20,15 @@ export class Document {
       return new GCanvas(opt.width, opt.height, opt);
     },
 
-    image(opt: Opts): Image {
+    image(opt: ImageOpts): Image {
       const img = new Image()
-      img.src = opt.src || ""
+      img.src = opt.src
       img.width = opt.width
       img.height = opt.height
       return img;
     },
 
-    window(opt: Opts): Window {
+    window(opt: WindowOptions): Window {
       return App.createWindow(opt)
     },
 
