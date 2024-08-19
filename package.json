@@ -1,10 +1,10 @@
 {
   "name": "node-sdl-canvas",
-  "version": "5.0.1",
+  "version": "5.0.2",
   "description": "node-sdl-canvas is there!!",
   "main": "./dist/mod.js",
   "scripts": {
-    "install": "tsc"
+    "compile": "tsc"
   },
   "repository": {
     "type": "git",
