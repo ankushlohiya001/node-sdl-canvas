@@ -17,9 +17,8 @@
     "canvas": "^2.11.2",
     "keycode": "^2.2.1",
     "node-sdl": "^3.0.0",
-    "typescript": "^5.5.4"
-  },
-  "devDependencies": {
+    "typescript": "^5.5.4",
     "@types/node": "^22.1.0"
-  }
+  },
+  "devDependencies": {}
 }
