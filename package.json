@@ -1,6 +1,6 @@
 {
   "name": "node-sdl-canvas",
-  "version": "5.0.3",
+  "version": "5.0.4",
   "description": "node-sdl-canvas is there!!",
   "main": "./dist/mod.js",
   "scripts": {
