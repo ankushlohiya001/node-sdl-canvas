@@ -1,6 +1,6 @@
 import { CommonEvent } from "./common_event";
-import fs from "fs";
-import { URL } from "url";
+import fs from "node:fs";
+import { URL } from "node:url";
 import { EventType } from "../types";
 
 export class DropEvent extends CommonEvent {

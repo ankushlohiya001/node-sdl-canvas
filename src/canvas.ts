@@ -1,4 +1,4 @@
-import { Canvas, CanvasRenderingContext2D, registerFont } from "canvas";
+import { Canvas, SKRSContext2D, GlobalFonts } from "@napi-rs/canvas";
 import fs from "node:fs";
 import path from "node:path";
 let createGL: boolean; //gl module to be loaded dynamically
@@ -34,9 +34,7 @@ export class GCanvas {
       },
       set font(src: string) {
         const family = path.basename(src).split(path.extname(src))[0];
-        registerFont(src, {
-          family,
-        });
+        GlobalFonts.registerFromPath(src);
       },
     };
   }
@@ -71,14 +69,14 @@ export class GCanvas {
     this.canvas.height = hei;
   }
 
-  getContext(type: "2d"): CanvasRenderingContext2D;
+  getContext(type: "2d"): SKRSContext2D;
   getContext(type: string) {
     switch (type.toLowerCase()) {
       case "3d":
       case "webgl":
       case "gl":
       case "experimental-webgl":
-        return null
+        return null;
       // case "opengl":
       //   if (this.context2d) return null;
       //   if (!createGL) createGL = require("gl");
@@ -101,14 +99,13 @@ export class GCanvas {
   }
 
   getPixelData(): Buffer {
-    return this.canvas.toBuffer("raw");
+    return this.canvas.data();
   }
 
   saveAs(name: string, after: () => void) {
-    const out = fs.createWriteStream(`${name}`);
-    const stream = this.canvas.createPNGStream();
-    stream.pipe(out);
-    out.on("finish", () => {
+    const buffer = this.canvas.toBuffer("image/png");
+
+    fs.writeFile(`${name}.png`, buffer, (err) => {
       console.log(`drawing to file: ${name}`);
       if (typeof after == "function") after();
     });

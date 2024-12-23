@@ -1,5 +1,5 @@
 {
   "name": "@ankush/node-sdl-canvas",
-  "version": "5.0.0",
+  "version": "5.0.5",
   "exports": "./mod.ts"
 }

@@ -4,17 +4,17 @@ import * as types from "./types";
 import { Window as SdlWindow } from "node-sdl";
 import { implement as implementEvents } from "./eventer";
 
-import EventEmitter from "events";
+import EventEmitter from "node:events";
 import { setupEventWatcher } from "./events/mod";
 
-import { performance } from "perf_hooks";
+import { performance } from "node:perf_hooks";
 
 export interface WindowOptions {
-  x?: number,
-  y?: number,
-  width?: number,
-  height?: number,
-  title?: string,
+  x?: number;
+  y?: number;
+  width?: number;
+  height?: number;
+  title?: string;
   type?: any;
   fullscreen?: boolean;
   hidden?: boolean;
@@ -27,8 +27,8 @@ export interface WindowOptions {
   opengl?: boolean;
 }
 
-type Position = { x: number, y: number } | [number, number]
-type Size = { w: number, h: number }
+type Position = { x: number; y: number } | [number, number];
+type Size = { w: number; h: number };
 
 export class Window {
   static list: Map<number, Window> = new Map(); // stroing all window by their IDs
@@ -133,7 +133,7 @@ export class Window {
 
     this.canvasList = new Set(); // list of canvas to render
 
-    implementEvents(this)
+    implementEvents(this);
     this.eventEmitter = new EventEmitter();
   }
 
@@ -311,7 +311,7 @@ export class Window {
     clearTimeout(ref);
   }
 
-  requestAnimationFrame(cb: (performance: number) => Promise<any>): number
+  requestAnimationFrame(cb: (performance: number) => Promise<any>): number;
   requestAnimationFrame(cb: (performance: number) => Promise<any>): any {
     if (this._closed) return;
     const crnt = performance.now();

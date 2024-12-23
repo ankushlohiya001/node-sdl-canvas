@@ -1,11 +1,17 @@
 {
   "name": "node-sdl-canvas",
-  "version": "5.0.4",
+  "version": "5.0.5",
   "description": "node-sdl-canvas is there!!",
   "main": "./dist/mod.js",
+  "type": "module",
+  "types": "./dist/mod.d.ts",
   "scripts": {
-    "install": "tsc"
+    "tsc": "tsc && tsc-alias"
   },
+  "files": [
+    "dist",
+    "build"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/ankushlohiya001/node-sdl-canvas.git"
@@ -14,11 +20,13 @@
   "author": "kushlohiya",
   "license": "ISC",
   "dependencies": {
-    "canvas": "^2.11.2",
+    "@napi-rs/canvas": "^0.1.65",
+    "@types/node": "^22.1.0",
     "keycode": "^2.2.1",
-    "node-sdl": "^3.0.0",
-    "typescript": "^5.5.4",
-    "@types/node": "^22.1.0"
+    "node-sdl": "file:../node-sdl",
+    "typescript": "^5.5.4"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "tsc-alias": "^1.8.10"
+  }
 }

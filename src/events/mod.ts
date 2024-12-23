@@ -37,7 +37,9 @@ function eventHandler(
   }
 }
 
-export function setupEventWatcher(windowList: Map<number, Window>): EventWatcher {
+export function setupEventWatcher(
+  windowList: Map<number, Window>,
+): EventWatcher {
   const eventWatcher = new EventWatcher();
 
   eventWatcher.setCallback((eventType: number, winId: number) => {

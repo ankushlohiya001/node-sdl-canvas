@@ -1,17 +1,17 @@
 import { implement } from "./eventer";
 import { GCanvas } from "./canvas";
-import { Image } from "canvas";
+import { Image } from "@napi-rs/canvas";
 import { Window, WindowOptions } from "./window";
 import { App } from "./app";
 import { Audio, AudioOptions } from "./audio";
 
 interface Opts {
-  width: number
-  height: number
+  width: number;
+  height: number;
 }
 
 interface ImageOpts extends Opts {
-  src: string
+  src: string;
 }
 
 export class Document {
@@ -21,20 +21,20 @@ export class Document {
     },
 
     image(opt: ImageOpts): Image {
-      const img = new Image()
-      img.src = opt.src
-      img.width = opt.width
-      img.height = opt.height
+      const img = new Image();
+      img.src = opt.src;
+      img.width = opt.width;
+      img.height = opt.height;
       return img;
     },
 
     window(opt: WindowOptions): Window {
-      return App.createWindow(opt)
+      return App.createWindow(opt);
     },
 
     audio(opt: AudioOptions): Audio {
-      return Audio.create(opt)
-    }
+      return Audio.create(opt);
+    },
   };
   window: Window | null;
 
@@ -43,10 +43,10 @@ export class Document {
     implement(this);
   }
 
-  createElement(elem: "window", opt: Opts): Window
-  createElement(elem: "canvas", opt: Opts): GCanvas
-  createElement(elem: "image", opt: Opts): Image
-  createElement(elem: "audio", opt: AudioOptions): Audio
+  createElement(elem: "window", opt: Opts): Window;
+  createElement(elem: "canvas", opt: Opts): GCanvas;
+  createElement(elem: "image", opt: Opts): Image;
+  createElement(elem: "audio", opt: AudioOptions): Audio;
   createElement(elem: string, opt: any) {
     const create = Document.createMap[elem];
     if (!create) throw `element type "${elem}" not available..`;

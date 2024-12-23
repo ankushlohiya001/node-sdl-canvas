@@ -1,4 +1,4 @@
-import * as sdl from "node-sdl";
+import SDL from "node-sdl";
 import { InitFlag } from "./types";
 
 import { Window, WindowOptions } from "./window";
@@ -29,7 +29,7 @@ export class App {
   }
 
   static initSDL() {
-    if (sdl.init(InitFlag.VIDEO | InitFlag.AUDIO) !== 0) {
+    if (SDL.init(InitFlag.VIDEO | InitFlag.AUDIO) !== 0) {
       console.log("->Unable to initalise SDL");
       App.status = Status.Stopped;
       App.exit();
@@ -53,7 +53,7 @@ export class App {
       console.log("->Unable, already exited!!");
     } else if (Window.list.size == 0) {
       App.status = Status.Stopped;
-      sdl.quit();
+      SDL.quit();
       console.log("->Success to exit SDL");
     }
   }
