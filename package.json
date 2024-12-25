@@ -23,7 +23,7 @@
     "@napi-rs/canvas": "^0.1.65",
     "@types/node": "^22.1.0",
     "keycode": "^2.2.1",
-    "node-sdl": "file:../node-sdl",
+    "node-sdl": "^3.0.2",
     "typescript": "^5.5.4"
   },
   "devDependencies": {
